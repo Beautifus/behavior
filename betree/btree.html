@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>btree</title>
+	<link rel="stylesheet" type="text/css" href="https://rawgit.com/Beautifus/technical-college/blob/master/betree/css/mycss.css">
+	<!--<link rel="stylesheet" type="text/css" href="./css/mycss.css">-->
+	<script type="text/javascript">
+	var s="this";
+		console.log(s);
+	</script>
+</head>
+<body>
+	<nav id="head">
+		
+		<ul class="header">
+			<li>
+				<a href="baidu.com">查询</a>
+			</li>
+			<li>
+				<a href="#">File</a><ul class="child">
+					<li>
+					<a href="#">New Tree</a>
+					</li>
+					<li>
+						<a href="#">Import Tree</a>
+					</li>
+					<li>
+						<a href="#">E</a>
+					</li>
+					<hr>
+					<li>
+						<a href="#">Add Custom Node</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#" id="edit">Edit</a><ul class="child">
+					<li>
+						<a href="#">New Tree</a>
+					</li>
+					<li>
+						<a  id="imports" href="#">Import Tree</a>
+					</li>
+					<li >
+						<a   id="exports" href="#">Export Tree</a>
+					</li>
+					<hr>
+					<li>
+						<a href="#">Add Custom Node</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">View</a>
+				<ul class="child">
+					<li>
+					<a href="#">New Tree</a>
+					</li>
+					<li>
+						<a href="#">Import Tree</a>
+					</li>
+					<li>
+						<a href="#">Export Tree</a>
+					</li>
+					<hr>
+					<li>
+						<a href="#">Add Custom Node</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Selection</a>
+				<ul class="child">
+					<li>
+					<a href="#">New Tree</a>
+					</li>
+					<li>
+						<a href="#">Import Tree</a>
+					</li>
+					<li>
+						<a href="#">Export Tree</a>
+					</li>
+					<hr>
+					<li>
+						<a href="#">Add Custom Node</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+	<div id="di">
+		<div >
+			<ul id="left" class="left" >
+				<li >
+					<div>
+						node-list
+					</div>
+				</li>
+			</ul>
+
+		</div>
+		<div class="content" id="content">
+			<canvas id="mycanvas" width="800" height="1000"></canvas>
+		</div>
+		<div class="right">
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var mycanvas=document.getElementById("mycanvas");
+	var cont=mycanvas.getContext('2d');
+	var draws=[];
+</script>
+
+
+<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/blob/master/betree/js/core.js"></script>
+	<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/blob/master/betree/js/tree.js"></script>
+	<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/blob/master/betree/js/view.js"></script>
+	<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/blob/master/betree/js/script.js"></script>
+
+
+<!--
+<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/master/betree/js/core.js"></script>
+<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/master/betree/js/tree.js"></script>
+<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/master/betree/js/view.js"></script>
+<script type="text/javascript" src="https://rawgit.com/Beautifus/technical-college/master/betree/js/script.js"></script>
+	<script type="text/javascript" src="./js/core.js"></script>
+	<script type="text/javascript" src="./js/tree.js"></script>
+	<script type="text/javascript" src="./js/view.js"></script>
+	<script type="text/javascript" src="./js/script.js"></script>
+-->
+</html>
