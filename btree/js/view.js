@@ -220,8 +220,6 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		v.fill();
 		v.closePath();
 	},
-	
-
 	view.prototype.drawRight=function(v,x,y,q,n,m,p){
 		v.fillStyle="white";//q=40,n=6,m=20,p=2
 		v.strokeStyle="#787372";
