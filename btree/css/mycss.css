@@ -33,6 +33,9 @@ a{
 	list-style:none;
 	color:silver;
 }
+.child li{
+	margin-top: 10px;
+}
 .child li a{
 	color:silver;
 }
@@ -87,6 +90,9 @@ a{
 .conul li{
 	font-size:18px;
 	margin-top:10px;
+}
+.conul li:hover{
+	cursor: pointer;
 }
 .comchild{
 	padding-left:20px;

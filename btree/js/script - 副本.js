@@ -115,7 +115,7 @@ function clickListen(a){
 		}
 		//alert(divX+" "+divY);
 		var d=v.drawCicle(cont,type,src,divX,divY); 
-		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,lineOut:[],});
+		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,lineOut:[],lineIn:[]});
             d.redraw();
             var len=draws.length-1;
 		document.onmousemove=function(event){
@@ -226,7 +226,7 @@ function imjs(data,k1,lx,ly,x,y){
     if(lx&&ly){
     	var k2=draws.length-1;
         draws[k1].lineOut.push({lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k:k2});
-        draws[k2].lineIn={lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k:k1}
+        draws[k2].lineIn.push({lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k:k1});
         v.drawCicle(cont,type,t,parseInt(x),parseInt(y));
         v.drawLine(cont,parseInt(lx)+45,parseInt(ly)+20,parseInt(x)-5,parseInt(y)+20);
     }else{
@@ -315,27 +315,27 @@ mycanvas.onmousedown=function(event){
 					draws[k].display.x=x;
 		        	draws[k].display.y=y;
 		        
-		        if(draws[k].lineIn&&(draws[k].type=="composite"||draws[k].type=="init")){ //xy为终点，lxly为起点；
-		        	draws[k].lineIn.x=draws[k].display.x-9;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       		draws[k].lineIn.y=draws[k].display.y+20;
-		       		var s=draws[k].lineIn.k;
-		       	//	alert(draws[s].lineOut.length);
+		        if(draws[k].lineIn.length&&(draws[k].type=="composite"||draws[k].type=="init")){ //xy为终点，lxly为起点；
+		        	for(var g=0;g<draws[s].lineIn.length;g++){
+		        		draws[k].lineIn[g].x=draws[k].display.x-9;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
+		       			draws[k].lineIn[g].y=draws[k].display.y+20;
+		       			var s=draws[k].lineIn[g].k;
+		       			for(var j=0;j<draws[s].lineOut.length;j++){
+		       				draws[s].lineOut[j].x=draws[k].x-9;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
+		       				draws[s].lineOut[j].y=draws[k].y+20;
+		       			}
+		        	}	
+		        }else if(draws[k].lineIn.length&&draws[k].type=="decorator"){
 
-		       		for(var j=0;j<draws[s].lineOut.length;j++){
-		       			draws[s].lineOut[j].x=draws[k].x-9;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       			draws[s].lineOut[j].y=draws[k].y+20;
-		       		}
-		       		
-		        }else if(draws[k].lineIn&&draws[k].type=="decorator"){
-		        	draws[k].lineIn.x=draws[k].display.x-109;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       		draws[k].lineIn.y=draws[k].display.y;
-		       		var s=draws[k].lineIn.k;
-		       	//	alert(draws[s].lineOut.length);
-
-		       		for(var j=0;j<draws[s].lineOut.length;j++){
-		       			draws[s].lineOut[j].x=draws[k].x-109;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       			draws[s].lineOut[j].y=draws[k].y;
-		       		}
+		        	for(var g=0;g<draws[s].lineIn.length;g++){
+		        		draws[k].lineIn[g].x=draws[k].display.x-109;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
+		       			draws[k].lineIn[g].y=draws[k].display.y;
+		       			var s=draws[k].lineIn[g].k;
+		       			for(var j=0;j<draws[s].lineOut.length;j++){
+		       				draws[s].lineOut[j].x=draws[k].x-109;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
+		       				draws[s].lineOut[j].y=draws[k].y;
+		       			}
+		        	}	
 		        }
 		        if(draws[k].lineOut.length){
 		        	for(var j=0;j<draws[k].lineOut.length;j++){

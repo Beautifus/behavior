@@ -282,3 +282,16 @@ this.b3=this.b3||{},
 		}
 		b3.Inverter=a
 	}();
+this.b3=this.b3||{},
+	function(){
+		var a=b3.class(b3.Decorator),b=a.prototype;
+		b.name="Repeater";
+		b.open=function(a){a.blackboard.set("i",0,a.tree.id,this.id)};
+		b.tick=function(a){
+			if(!this.child)
+				return b3.ERROR;
+			for(var b=a.blackboard.get("i",a.tree.id,this.id),c=b3.SUCCESS;(this.maxLoop<0||b<this.maxLoop)&&(c=this.child._execute(a),c==b3.SUCCESS||c==b3.FAILURE);b++);
+				return b=a.blackboard.set("i",b,a.tree.id,this.id),c
+		};
+		b3.Repeater=a
+	}();

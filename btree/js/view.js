@@ -27,18 +27,8 @@ view.prototype.redraw=function(x,y,w,z){
 }
 view.prototype.drawCicle=function(v,src,type,x,y){
 	if(src!="init"){
-		v.fillStyle="white";
-		v.beginPath();
-		v.moveTo(x+10,y);
-		v.arcTo(x+40,y,x+40,y+40,15);
-		v.arcTo(x+40,y+40,x,y+40,15);
-		v.arcTo(x,y+40,x,y,15);
-		v.arcTo(x,y,x+40,y,15);
-		v.fill();
-		v.closePath();
+		
 		//this.drawPic(v,x,y);
-		this.drawleft(v,x,y);
-		this.drawRight(v,x,y);
 		switch(src){
 			case "composite":
 				this.drawComposite(v,type,x,y);
@@ -54,14 +44,18 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 				break;
 		}
 	}else{
+		this.drawRight(v,x,y,40,6,20,2);
 		v.fillStyle="white";
+		v.strokeStyle="#787372";
+		v.lineWidth=2;
 		v.beginPath();
 		v.moveTo(x+10,y);
-		v.arcTo(x+40,y,x+40,y+40,10);
-		v.arcTo(x+40,y+40,x,y+40,10);
-		v.arcTo(x,y+40,x,y,10);
-		v.arcTo(x,y,x+40,y,10);
+		v.arcTo(x+40,y,x+40,y+40,15);
+		v.arcTo(x+40,y+40,x,y+40,15);
+		v.arcTo(x,y+40,x,y,15);
+		v.arcTo(x,y,x+40,y,15);
 		v.fill();
+		v.stroke();
 		v.closePath();
 		v.beginPath();
 		v.strokeStyle="black";
@@ -72,13 +66,27 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		v.lineTo(x+10,y+30);
 		v.stroke();
 		v.closePath();
-		this.drawRight(v,x,y);
+		
 	}
 		
 		return this;
 	}
 	view.prototype.drawComposite=function(v,type,x,y){
 		//alert(type);
+		this.drawleft(v,x,y,6,20,2);
+		this.drawRight(v,x,y,40,6,20,2);
+		v.fillStyle="white";
+		v.strokeStyle="#787372";
+		v.lineWidth=2;
+		v.beginPath();
+		v.moveTo(x+10,y);
+		v.arcTo(x+40,y,x+40,y+40,15);
+		v.arcTo(x+40,y+40,x,y+40,15);
+		v.arcTo(x,y+40,x,y,15);
+		v.arcTo(x,y,x+40,y,15);
+		v.fill();
+		v.stroke();
+		v.closePath();
 		switch(type){
 			case "sequence":
 				this.drawSequence(v,x,y);
@@ -109,7 +117,6 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		v.lineTo(x+35,y+20);
 		v.fill();
 		v.stroke();
-
 		v.closePath();
 	}
 	view.prototype.drawMemPriority=function(v,x,y){
@@ -145,13 +152,34 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		v.stroke();
 		v.closePath();
 	}
-	view.prototype.drawDecorator=function(v,x,y){
+	view.prototype.drawDecorator=function(v,type,x,y){
+//n,m,p,
+		
+		v.fillStyle="white";
+		v.strokeStyle="#787372";
+		v.lineWidth=2;
+		v.font="18px Arial";
 		v.beginPath();
-		v.strokeStyle="black";
-		v.lineTo(x+4,y+19);
-		v.lineTo(x+35,y+19);
+		v.moveTo(x-100,y);
+		v.lineTo(x,y-30);
+		v.lineTo(x+103,y);
+		v.lineTo(x,y+30);
+		v.lineTo(x-100,y);
+		v.stroke();
+		v.fill();
 		v.stroke();
 		v.closePath();
+		v.beginPath();
+		v.strokeStyle="black";
+		v.fillStyle="black";
+		//v.fill();
+		v.fillText(type,x-50,y+5);
+		v.fill();
+		v.stroke();
+		v.closePath();
+		this.drawleft(v,x-100,y,6,0,2);
+		this.drawRight(v,x,y,100,6,0,2);
+
 	}
 	view.prototype.drawCondition=function(v,x,y){
 		v.beginPath();
@@ -177,32 +205,58 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		v.stroke();
 		v.closePath();
 	}
-	view.prototype.drawleft=function(v,x,y){
+	view.prototype.drawleft=function(v,x,y,n,m,p){
 		v.fillStyle="white";
+		v.strokeStyle="#787372";//n=6,m=20,p=2
 		v.beginPath();
-		v.arc(x-5,y+20,10,Math.PI/180*300,Math.PI/180*60,true);
+		v.arc(x-n/2,y+m,n,Math.PI/180*300,Math.PI/180*60,true);
+		v.fill();
+		v.stroke();
+		v.closePath();
+		v.beginPath();
+		v.fillStyle="silver";
+		v.moveTo(x-(n/2-p),y+m);
+		v.arc(x-n/2,y+m,p,0,Math.PI*2,true);
 		v.fill();
 		v.closePath();
-	}
-	view.prototype.drawRight=function(v,x,y){
-		v.fillStyle="white";
+	},
+	
+
+	view.prototype.drawRight=function(v,x,y,q,n,m,p){
+		v.fillStyle="white";//q=40,n=6,m=20,p=2
+		v.strokeStyle="#787372";
 		v.beginPath();
-		v.arc(x+45,y+20,10,Math.PI/180*240,Math.PI/180*160,false);
+		v.arc(x+q+n/2,y+m,n,Math.PI/180*240,Math.PI/180*160,false);
+		v.fill();
+		v.stroke();
+		v.closePath();
+		v.beginPath();
+		v.fillStyle="silver";
+		v.moveTo(x+q+n/2+p,y+m);
+		v.arc(x+q+n/2,y+m,p,0,Math.PI*2,true);
 		v.fill();
 		v.closePath();
 	}
 	view.prototype.drawLine=function(v,x,y,w,z){
 		//alert("ha");
-		v.strokeStyle="blue";
+		v.strokeStyle="#787372";
 		v.beginPath();
 		v.moveTo(x,y);
 		v.lineTo(w,z);
 		v.stroke();
 		v.closePath();
+		v.beginPath();
+		v.fillStyle="#787372";
+		v.lineTo(w-7,z-5);
+		v.lineTo(w-7,z+5);
+		v.lineTo(w,z);
+		v.fill();
+		v.closePath();
 	}
 var v=new view();
 var wid=document.getElementById("content").offsetLeft;
 var hei=document.getElementById("content").offsetTop;
+//alert(wid+" "+hei);
 var contents=document.getElementById("content");
 
 
