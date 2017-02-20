@@ -15,12 +15,8 @@
 <body>
 	<nav id="head">
 		
-		<ul class="header">
-			<li>
-				<a href="baidu.com">查询</a>
-			</li>
-			<li>
-				<a href="#">File</a><ul class="child">
+		<ul class="header"><li><span>查询</span></li>
+			<li><span>File</span><ul class="child">
 					<li>
 					<a href="#">New Tree</a>
 					</li>
@@ -36,8 +32,7 @@
 					</li>
 				</ul>
 			</li>
-			<li>
-				<a href="#" id="edit">Edit</a><ul class="child">
+			<li><span id="edit">Edit</span><ul class="child">
 					<li>
 						<a href="#">New Tree</a>
 					</li>
@@ -53,8 +48,7 @@
 					</li>
 				</ul>
 			</li>
-			<li>
-				<a href="#">View</a><ul class="child">
+			<li><span>View</span><ul class="child">
 					<li>
 					<a href="#">New Tree</a>
 					</li>
@@ -70,8 +64,7 @@
 					</li>
 				</ul>
 			</li>
-			<li>
-				<a href="#">Selection</a><ul class="child">
+			<li><span>Selection</span><ul class="child">
 					<li>
 					<a href="#">New Tree</a>
 					</li>
@@ -111,6 +104,7 @@
 	var mycanvas=document.getElementById("mycanvas");
 	var cont=mycanvas.getContext('2d');
 	var draws=[];
+	var lines=[];//lx，ly起始点,x,y终止点，k1，起始点图像，框终止点图像
 </script>
 
 	<script type="text/javascript" src="./js/core.js"></script>

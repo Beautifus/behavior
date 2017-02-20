@@ -26,27 +26,44 @@ a{
 }
 .header>li{
 	display:inline-block;
-	margin-left:40px;	
+	margin-left:10px;
+	width:100px;
+
+}
+.header>li span{
+	display: inline-block;
+	width:100px;
+	height:100%;
+	text-align: center;
+	line-height: 40px;
+}
+.header>li span:hover{
+	background:gray;
+	cursor: pointer;
+	border-radius: 10px;
 }
 .child{
 	display:none;
 	list-style:none;
 	color:silver;
+	background:gray;
+	border-radius:10px;
 }
 .child li{
 	margin-top: 10px;
 }
+.child li:first-child{
+	margin-top:0px;
+}
 .child li a{
 	color:silver;
+
 }
 .left{
 	width:18%;
 	height:100%;
 	float:left;
 	color:silver;
-
-	/*background-color:rgba(180,190,180,0.4);*/
-	/*border:1px solid red;*/
 	list-style: none;
 }
 .left li:first-child div{

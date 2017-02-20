@@ -19,34 +19,38 @@ var headers=document.getElementsByClassName("header")[0];
 var edite=document.getElementById("edit");
 var editeFlag=1;
 
-(function headerListen(){
+function headerListen(){
 	var headerFlag=[1,1,1,1,1];
 	for(var i=0;i<headers.children.length;i++){
-		this.i=i;
-		var that=this;
-		headers.children[i].onclick=function(event){
+		let k=i;
+		headers.children[i].children[0].onclick=function(event){
 			var event=event||window.event;
 			var target=event.target||event.srcElement;
-			if(headerFlag[that.i]){
-				target.nextSibling.style.display="block";
-				headerFlag[that.i]="";
-			}else{
-				target.nextSibling.style.display="none";
-				headerFlag[that.i]=1;
+			var node=target.parentNode.parentNode.children;
+			for(var j=0;j<node.length;j++){
+				if(j!=k){headerFlag[j]=headerFlag[j]?headerFlag[j]:!headerFlag[j]}
+				if(node[j].getElementsByTagName("ul")[0]){
+					node[j].getElementsByTagName("ul")[0].style.display=null;
+				}
+				
 			}
+			if(headerFlag[k]){
+				target.nextSibling.style.display="block";
+				headerFlag[k]=!headerFlag[k];
+			}else if(!headerFlag[k]){
+				target.nextSibling.style.display=null;
+				headerFlag[k]=!headerFlag[k];
+			}	
+			
+
 		}
-	}
-})();
 
-edite.onclick=function(event){
-
-	
-	
+		}
 }
+headerListen();
 inits();
 var nodes={};
 var b3=this.b3;
-//alert(b3.Sequence.prototype.name);
 registerNode(b3.Sequence);
 registerNode(b3.Priority);
 registerNode(b3.MemPriority);
@@ -115,7 +119,7 @@ function clickListen(a){
 		}
 		//alert(divX+" "+divY);
 		var d=v.drawCicle(cont,type,src,divX,divY); 
-		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,lineOut:[],});
+		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,children:[],});
             d.redraw();
             var len=draws.length-1;
 		document.onmousemove=function(event){
@@ -147,32 +151,28 @@ function createUUID(){
 }
 function inits(){
 	v.drawCicle(cont,"init",0,300,200);
-	draws.push({title:"btree",display:{x:300,y:200},src:"init",type:"init",root:"",lineOut:[]});
+	draws.push({title:"btree",display:{x:300,y:200},src:"init",type:"init",root:"",children:[]});
 }
 e1.onclick=function(event){
 	var event=event||window.event;
 	var target=event.target||event.srcElement;
 	var dat={type:"init",title:draws[0].title,root:draws[0].root,display:{x:draws[0].display.x,y:draws[0].display.y},node:{}};
 	var ids=draws[0].root;
-	dat.node[ids]=exportJSON(dat,draws[1]);
-	//changedata(1);
-	alert(JSON.stringify(dat));
-	data=dat;
-
-	target.parentNode.parentNode.style.display=null;
+	if(draws[1])
+		dat.node[ids]=exportJSON(dat,draws[1]);
+		alert(JSON.stringify(dat));
+		data=dat;
+		target.parentNode.parentNode.style.display=null;
 }
 function exportJSON(dat,node){
-	//alert(node.src+" heihei");
 	var childrens=[];
 	var node=node;
 	var id=node.id;
-	//alert(node.lineOut.length+"  haha");
-	for(var i=0;i<node.lineOut.length;i++){
-		var child=exportJSON(dat,draws[node.lineOut[i].k]);
+	for(var i=0;i<node.children.length;i++){
+		var child=exportJSON(dat,draws[node.children[i]]);
 		var ids=child.id;
 		dat.node[ids]=child;
 		childrens.push(child.id);
-		//data.node[ids]=exportJSON(draws[1]);
 	}
 	return {"id":id,"src":node.src,"type":node.type,"display":{"x":node.display.x,"y":node.display.y},"children":childrens};
 }
@@ -180,15 +180,10 @@ e2.onclick=function(event){
 	var event=event||window.event;
 	var target=event.target||event.srcElement;
 	cont.clearRect(0,0,mycanvas.width,mycanvas.height);
-	//var dat={title:draws[0].title,src:"init",root:draws[0].root,display:{x:draws[0].display.x,y:draws[0].display.y},lineOut:draws[0].lineOut};
+	//alert(JSON.stringify(data));
 	draws=[];
-	//draws.push(dat);
-	//var t=
-	for(var k in data){
-	//	alert(data[k]);
-	}
+	lines=[];
 	importJSON(data,0,0,0,data.display.x,data.display.y);
-	//alert(JSON.stringify(t));
 	target.parentNode.parentNode.style.display=null;
 }
 function importJSON(dat,k1,lx,ly,x,y){
@@ -200,7 +195,6 @@ function importJSON(dat,k1,lx,ly,x,y){
     	 for(var i=0;i<dat["children"].length;i++){
     	 	var idd=dat["children"][i];
     	 	var node=data.node[idd];
-    	 	
         	var child=importJSON(node,len,dat.display.x,dat.display.y,node.display.x,node.display.y);
         	childrens.push(child.id);
         }
@@ -208,8 +202,11 @@ function importJSON(dat,k1,lx,ly,x,y){
     }else if(dat["root"]){
     	var idt=dat["root"];
     	var n=data.node[idt];
-    	importJSON(n,len,dat.display.x,dat.display.y,n.display.x,n.display.y);
-    	return {root:idt,"type":dat["type"],display:{"x":dat.display.x,"y":dat.display.y},"node":{}};
+    	var nx=importJSON(n,len,dat.display.x,dat.display.y,n.display.x,n.display.y);
+    	var nll={root:idt,"type":dat["type"],display:{"x":dat.display.x,"y":dat.display.y,"node":{}}};
+    	nll["node"]=nx;
+    	//return 
+    	return nll;
 
    
 }
@@ -219,14 +216,15 @@ function imjs(data,k1,lx,ly,x,y){
     var type=data["type"];
     var id=data["id"];
     if(id){
-    	draws.push({id:id,display:{x:parseInt(x),y:parseInt(y)},src:t,type:type,lineOut:[]});
+    	draws.push({id:id,display:{x:parseInt(x),y:parseInt(y)},src:t,type:type,children:[]});
     }else{
-    	draws.push({title:data.title,src:t,type:type,root:data["root"],display:{x:x,y:y},lineOut:[]});
+    	draws.push({title:data.title,src:t,type:type,root:data["root"],display:{x:x,y:y},children:[]});
     }
     if(lx&&ly){
     	var k2=draws.length-1;
-        draws[k1].lineOut.push({lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k:k2});
-        draws[k2].lineIn={lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k:k1}
+       // draws[k1].lineOut.push({lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k:k2});
+        lines.push({lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k1:k1,k2:k2});
+      //  draws[k2].lineIn={lx:parseInt(lx)+50,ly:parseInt(ly)+20,x:parseInt(x)-10,y:parseInt(y)+20,k:k1}
         v.drawCicle(cont,type,t,parseInt(x),parseInt(y));
         v.drawLine(cont,parseInt(lx)+45,parseInt(ly)+20,parseInt(x)-5,parseInt(y)+20);
     }else{
@@ -247,10 +245,10 @@ function getPos(event){
 		var e=event||window.event;
 		var scrollX=document.body.scrollLeft||document.documentElement.scrollLeft;
 		var scrollY=document.body.scrollTop||document.documentElement.scrollTop;
-		var x=e.clientX||e.clientX+scrollX;
+		var x=scrollX?e.clientX+scrollX:e.clientX;
 		x=x-wid;
-		//alert(x);
-		var y=e.clientY||e.clientY+scrollY;
+		//alert(scrollY+"scr");
+		var y=scrollY?e.clientY+scrollY:e.clientY;
 		y=y-hei;
 		//alert(y);
 		return {x:x,y:y};
@@ -258,14 +256,19 @@ function getPos(event){
 /*画布点击 判断是移动图像还是划线*/
 mycanvas.onmousedown=function(event){
 	var event=event||window.event;
-	//alert(event.which)
+
+	//alert(draws[0].display.y);
 	if(event.which==1){
 		var pos=getPos(event);
+		//alert(pos.y);
 		var k=-1,x=0,y=0,lx=0,ly=0,flag=-1,key;
 		for(var i=0;i<draws.length;i++){
 			if(draws[i].type=="composite"||draws[i].type=="init"){
+				//alert(pos.x>=draws[i].display.x&&pos.x<=draws[i].display.x+40&&pos.y>=draws[i].display.y&&pos.y<=draws[i].display.y+40);
 				if(pos.x>=draws[i].display.x&&pos.x<=draws[i].display.x+40&&pos.y>=draws[i].display.y&&pos.y<=draws[i].display.y+40){
+					
 					k=i;
+					//alert(k);
 					x=draws[k].display.x;
 					y=draws[k].display.y;
 					break;
@@ -305,6 +308,7 @@ mycanvas.onmousedown=function(event){
 		}
 		mycanvas.onmousemove=function(event){
 			var event=event||window.event;
+
 			var poss=getPos(event);
 				x=poss.x;
 				y=poss.y;
@@ -314,46 +318,22 @@ mycanvas.onmousedown=function(event){
 				}else if(k>=0){
 					draws[k].display.x=x;
 		        	draws[k].display.y=y;
-		        
-		        if(draws[k].lineIn&&(draws[k].type=="composite"||draws[k].type=="init")){ //xy为终点，lxly为起点；
-		        	draws[k].lineIn.x=draws[k].display.x-9;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       		draws[k].lineIn.y=draws[k].display.y+20;
-		       		var s=draws[k].lineIn.k;
-		       	//	alert(draws[s].lineOut.length);
-
-		       		for(var j=0;j<draws[s].lineOut.length;j++){
-		       			draws[s].lineOut[j].x=draws[k].x-9;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       			draws[s].lineOut[j].y=draws[k].y+20;
-		       		}
-		       		
-		        }else if(draws[k].lineIn&&draws[k].type=="decorator"){
-		        	draws[k].lineIn.x=draws[k].display.x-109;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       		draws[k].lineIn.y=draws[k].display.y;
-		       		var s=draws[k].lineIn.k;
-		       	//	alert(draws[s].lineOut.length);
-
-		       		for(var j=0;j<draws[s].lineOut.length;j++){
-		       			draws[s].lineOut[j].x=draws[k].x-109;//lx，ly为起点，x,y为终点，对于传入的线段中x，y会改变
-		       			draws[s].lineOut[j].y=draws[k].y;
-		       		}
-		        }
-		        if(draws[k].lineOut.length){
-		        	for(var j=0;j<draws[k].lineOut.length;j++){
-		        		if(draws[k].type=="composite" || draws[k].type=="init"){
-			        		draws[k].lineOut[j].lx=draws[k].display.x+49;
-			        		draws[k].lineOut[j].ly=draws[k].display.y+20;
-			        		var p=draws[k].lineOut[j].k;
-			        		draws[p].lineIn.lx=draws[k].display.x+49;
-			        		draws[p].lineIn.ly=draws[k].display.y+20;
-		        		}else if(draws[k].type=="decorator"){
-		        			draws[k].lineOut[j].lx=draws[k].display.x+109;
-			        		draws[k].lineOut[j].ly=draws[k].display.y;
-			        		var p=draws[k].lineOut[j].k;
-			        		draws[p].lineIn.lx=draws[k].display.x+109;
-			        		draws[p].lineIn.ly=draws[k].display.y;
+		        	
+		        	for(var j=0;j<lines.length;j++){
+		        		if(lines[j].k2==k&&(draws[k].type=="composite"||draws[k].type=="init")){
+		        			lines[j].x=draws[k].display.x-9;
+		        			lines[j].y=draws[k].display.y+20;
+		        		}else if(lines[j].k2==k&&(draws[k].type=="decorator")){
+		        			lines[j].x=draws[k].display.x-109;
+		        			lines[j].y=draws[k].display.y;
+		        		}else if(lines[j].k1==k&&(draws[k].type=="composite"||draws[k].type=="init")){
+		        			lines[j].lx=draws[k].display.x+49;
+		        			lines[j].ly=draws[k].display.y+20;
+		        		}else if(lines[j].k1==k&&(draws[k].type=="decorator")){
+		        			lines[j].lx=draws[k].display.x+109;
+		        			lines[j].ly=draws[k].display.y;
 		        		}
 		        	}
-		        }
 			}
 		}
 		mycanvas.onmouseup=function(event){
@@ -365,19 +345,28 @@ mycanvas.onmousedown=function(event){
 				y=poss.y;
 				var res=checkCate(x,y);
 				var w=res.w;
+				//alert(lx+"lx ly "+ly);
 				if(w!=-1&&lx!=0&&ly!=0){
 					v.redraw();
 					var x=res.x;
 					var y=res.y;
-					draws[flag].lineOut.push({lx:lx,ly:ly,x:x,y:y,k:w});//xy为终点，lxly为起点；
-					draws[w].lineIn={lx:lx,ly:ly,x:x,y:y,k:flag};
-					if(draws[w].type=="composite")
+					if(draws[w].type=="composite"){
 						v.drawLine(cont,lx,ly,draws[w].display.x-9,draws[w].display.y+20);
-					else
+						lines.push({lx:lx,ly:ly,x:draws[w].display.x-9,y:draws[w].display.y+20,k1:flag,k2:w});
+
+					}else{
 						v.drawLine(cont,lx,ly,draws[w].display.x-109,draws[w].display.y);
-				}else{
+						lines.push({lx:lx,ly:ly,x:draws[w].display.x-109,y:draws[w].display.y,k1:flag,k2:w});
+					}
+					if(flag>=-1)
+						draws[flag].children.push(w);
+					if(flag==0){
+					draws[0].root=draws[w].id;
+					}
+				}else{	
 					v.redraw();
 				}
+				
 		}
 	}else if(event.which==3){
 		var event=event||window.event;
@@ -387,17 +376,11 @@ mycanvas.onmousedown=function(event){
 		var res=checkCate(x,y);
 		var w=res.w;
 		if(w!=-1){
-			var k=draws[w].lineIn.k;
-			for(var i=0;i<draws[k].lineOut.length;i++){
-				if(draws[k].lineOut[i].k==w){
-					draws[k].lineOut.splice(k,1);
+			for(var i=0;i<lines.length;i++){
+				if(lines[i].k1==w||lines[i].k2==w){
+					lines.splice(i,1);
 				}
 			}
-			for(var j=0;j<draws[w].lineOut.length;j++){
-				var m=draws[w].lineOut[j].k;
-				draws[m].lineIn=null;
-			}
-			draws[w].lineOut=[];
 			draws.splice(w,1);
 			v.redraw();
 		}
@@ -426,28 +409,3 @@ function checkCate(x,y){
 	}
 	return {w:w,x:x,y:y}
 }
-/*连线的函数*/
-/*function addLine(key,flag,lx,ly,x,y){
-		//var w=0,ff=false;
-		switch(key){
-				case "left":
-					alert("不能产生");
-					break;
-				case "right":
-					var res=checkCate(x,y);
-					var w=res.w;
-					
-					if(w>=0){
-						if(flag==0){
-							draws[0].root=draws[w].id;
-						}
-						var x=res.x;
-						var y=res.y;
-						draws[flag].lineOut.push({lx:lx,ly:ly,x:x,y:y,k:w});//xy为终点，lxly为起点；
-						draws[w].lineIn={lx:lx,ly:ly,x:x,y:y,k:flag};//xy为终点，lxly为起点；x与y为
-						break;
-					}else{
-						break;
-					}
-			}
-}*/

@@ -3,24 +3,15 @@ function view(){
 }
 
 view.prototype.redraw=function(x,y,w,z){
-	cont.clearRect(0,0,mycanvas.width,mycanvas.height);
+		cont.clearRect(0,0,mycanvas.width,mycanvas.height);
 			for(var i=0;i<draws.length;i++){
 				var poss=draws[i];
 				v.drawCicle(cont,poss.type,poss.src,poss.display.x,poss.display.y);
 			} 
-			for(var i=0;i<draws.length;i++){
-				var ps=draws[i];
-				//alert(ps[lineIn].length);
-				if(ps.lineIn){
-					v.drawLine(cont,ps.lineIn.lx,ps.lineIn.ly,ps.lineIn.x,ps.lineIn.y);
-				}
-				if(ps.lineOut.length){
-					for(var j=0;j<ps.lineOut.length;j++){
-						var pp=ps.lineOut[j];
-						v.drawLine(cont,pp.lx,pp.ly,pp.x,pp.y);
-					}
-					
-				}
+			for(var j=0;j<lines.length;j++){
+				//alert(j)
+				v.drawLine(cont,lines[j].lx,lines[j].ly,lines[j].x,lines[j].y);
+				draws[lines[j].k1].children.push(lines[j].k2);
 			}
 		
 	//alert(draws.length);
