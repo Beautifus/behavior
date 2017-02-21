@@ -483,7 +483,7 @@ mycanvas.onmousedown=function(event){
 		//alert(pos.y);
 		var k=-1,x=0,y=0,lx=0,ly=0,flag=-1,key;
 		for(var i=0;i<draws.length;i++){
-			if(draws[i].type=="composite"||draws[i].type=="init"){
+			if(draws[i].type=="composite"||draws[i].type=="decorator"||draws[i].type=="action"||draws[i].type=="init"){
 				//alert(pos.x>=draws[i].display.x&&pos.x<=draws[i].display.x+40&&pos.y>=draws[i].display.y&&pos.y<=draws[i].display.y+40);
 				if(pos.x>=draws[i].display.x&&pos.x<=draws[i].display.x+40&&pos.y>=draws[i].display.y&&pos.y<=draws[i].display.y+40){
 					
@@ -540,13 +540,13 @@ mycanvas.onmousedown=function(event){
 		        	draws[k].display.y=y;
 		        	
 		        	for(var j=0;j<lines.length;j++){
-		        		if(lines[j].k2==k&&(draws[k].type=="composite"||draws[k].type=="init")){
+		        		if(lines[j].k2==k&&(draws[k].type=="composite"||draws[i].type=="decorator"||draws[i].type=="action"||draws[k].type=="init")){
 		        			lines[j].x=draws[k].display.x-9;
 		        			lines[j].y=draws[k].display.y+20;
 		        		}else if(lines[j].k2==k&&(draws[k].type=="decorator")){
 		        			lines[j].x=draws[k].display.x-109;
 		        			lines[j].y=draws[k].display.y;
-		        		}else if(lines[j].k1==k&&(draws[k].type=="composite"||draws[k].type=="init")){
+		        		}else if(lines[j].k1==k&&(draws[k].type=="composite"||draws[i].type=="decorator"||draws[i].type=="action"||draws[k].type=="init")){
 		        			lines[j].lx=draws[k].display.x+49;
 		        			lines[j].ly=draws[k].display.y+20;
 		        		}else if(lines[j].k1==k&&(draws[k].type=="decorator")){
@@ -570,7 +570,7 @@ mycanvas.onmousedown=function(event){
 					v.redraw();
 					var x=res.x;
 					var y=res.y;
-					if(draws[w].type=="composite"){
+					if(draws[w].type=="composite"||draws[i].type=="decorator"||draws[i].type=="action"){
 						v.drawLine(cont,lx,ly,draws[w].display.x-9,draws[w].display.y+20);
 						lines.push({lx:lx,ly:ly,x:draws[w].display.x-9,y:draws[w].display.y+20,k1:flag,k2:w});
 
@@ -611,7 +611,7 @@ mycanvas.onmousedown=function(event){
 function checkCate(x,y){
 	var w=-1;
 	for(var i=0;i<draws.length;i++){
-			if(draws[i].type=="composite"|| draws[i].type=="init"){
+			if(draws[i].type=="composite"|| draws[i].type=="decorator"||draws[i].type=="action"||draws[i].type=="init"){
 				if((x>=draws[i].display.x-9&&x<draws[i].display.x&&y>=draws[i].display.y+14&&y<=draws[i].display.y+26)||(x>=draws[i].display.x&&x<=draws[i].display.x+40&&y>=draws[i].display.y&&y<=draws[i].display.y+40)){
 					x=draws[i].display.x-9;
 					y=draws[i].display.y+20;
