@@ -243,9 +243,15 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		v.closePath();
 	}
 var v=new view();
-var wid=document.getElementById("content").offsetLeft;
-var hei=document.getElementById("content").offsetTop;
+//var wid=document.getElementById("content").offsetLeft;
+//var hei=document.getElementById("content").offsetTop;
+//alert(document.getElementById("di").offsetTop);
+//alert(hei);
 //alert(wid+" "+hei);
+var bbox=mycanvas.getBoundingClientRect();
+//alert(bbox.left+" "+bbox.top);
+var wid=bbox.left;
+var hei=bbox.top;
 var contents=document.getElementById("content");
 
 

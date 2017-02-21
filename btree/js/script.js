@@ -8,7 +8,7 @@ conChild.className="comchild";
 conChild.id="conul";
 conChild.innerHTML="<li>sequence</li><li>dom</li>";
 con.appendChild(conChild);
-//leftcon.appendChild(con);
+var addcus=document.getElementById("addcus");
 
 var src="";
 var lineIn="lineIn",lineOut="lineOut";
@@ -18,8 +18,151 @@ var e2=document.getElementById("imports");
 var headers=document.getElementsByClassName("header")[0];
 var edite=document.getElementById("edit");
 var editeFlag=1;
+var body=document.getElementById("body");
+var b3=this.b3;
+(function(){
+	var newdiv=document.createElement("div");//最外层
+	newdiv.className="appends";
+	
+	var newp=document.createElement("div");//第一层
+	newp.innerHTML="Add Nodes";
+	newp.style.textAlign="center";
 
-function headerListen(){
+	newdiv.appendChild(newp);
+
+	var newdiv2=document.createElement("div");//第二层中
+	newdiv2.className="adda";
+	newdiv2.id="addnodes";
+
+	var newli1=document.createElement("div");//第二层中的第一层
+	newli1.style.width="100%";
+	newli1.style.height="30px";
+	
+	var newinput=document.createElement("input");
+	newinput.value="+";
+	newinput.type="button";
+	newinput.onclick=addcho;
+	newinput.className="operator";
+	newli1.appendChild(newinput);
+	newdiv2.appendChild(newli1);
+
+	var newdiv3=document.createElement("div");//第三层
+	newdiv3.style.float="right";
+	newdiv3.className="cadd";
+	newdiv3.id="addCancel";
+	newdiv3.innerHTML='<input type="button" onclick="addCaclick(event)" value="cancel"><input type="button"  onclick="addCaclick(event)" value="add">';
+
+	newdiv.appendChild(newdiv2);
+	newdiv.appendChild(newdiv3);
+	
+	addcus.onclick=function(){
+
+	var mydiv=document.getElementsByClassName("appends")[0];
+	if(!mydiv){
+			body.appendChild(newdiv);
+			addcho();
+	}else{
+			var mydiv=document.getElementsByClassName("appends")[0];
+			var parent=mydiv.querySelectorAll("div")[1];
+			var onenodes=document.getElementsByClassName("onenode");
+				//alert(onenodes.length)
+			if(onenodes.length){
+					for(var i=0;i<onenodes.length;i++){
+						parent.removeChild(onenodes[i]);
+					}
+			}
+			mydiv.style.display="block";
+			addcho();
+
+	}
+};
+})();
+function addcho(){
+	var mydiv=document.getElementById("addnodes");
+	var newdiv=document.createElement("div");
+	newdiv.style.margin="0px auto 0px auto";
+	newdiv.className="onenode";
+	newdiv.innerHTML='<input type="text" placeholder="Node name"><input type="text" placeholder="Node title"><select ><option value="Composite">Composite</option><option value="Decorator">Decorator</option><option value="Condition">Condition</option><option value="Action">Action</option></select><input type="button"  class="operator" style="background:#f0320b" onclick="operationAdd(event)" id="cancelnode"value="-">';
+	mydiv.appendChild(newdiv);
+}
+function operationAdd(event){
+			var event=event||window.event;
+			var target=event.target||event.srcElement;
+			if(String.trim(target.value)=="-"){
+				var parentdiv=target.parentNode;
+				parentdiv.parentNode.removeChild(parentdiv);
+			}
+}
+function addCaclick(event){
+			var event=event||window.event;
+			var target=event.target||event.srcElement;
+				var onenodes=document.getElementsByClassName("onenode");
+				if(target.value=="add"){
+					if(onenodes.length){
+						for(var i=0;i<onenodes.length;i++){
+							var name=onenodes[i].querySelectorAll("input")[0].value;
+							var title=onenodes[i].querySelectorAll("input")[1].value;
+							var category=onenodes[i].querySelector("select").value;
+
+							var cates=document.getElementsByClassName("conul");
+							var categ=String.toLowerCase(category);
+							one:for(var j=0;j<cates.length;j++){
+								if(cates[j].previousSibling.innerHTML==categ){
+									for(var k=0;k<cates[j].children.length;k++){
+										//alert(cates[j].children[k].innerHTML+" "+name)
+										if(cates[j].children[k].innerHTML==name){
+											break one;
+										}
+									}
+									var newli=document.createElement("li");
+									newli.innerHTML=name;
+									newli.id=name;
+									cates[j].appendChild(newli);
+									clickListen(newli);
+
+									this.b3=this.b3||{},function(){
+										var a;
+										switch(category){
+											case "Composite":
+												a=b3.class(b3.Composite);
+												break;
+											case "Decorator":
+												a=b3.class(b3.Decorator);
+												break;
+											case "Condition":
+												a=b3.class(b3.Condition);
+												break;
+											case "Action":
+												a=b3.class(b3.Action);
+												break;
+										}
+										var b=a.prototype;
+										b.name=name;
+										b.title=title;
+										b._BaseNode_initialize=b.initialize;
+										b.initialize=function(a){
+											this._BaseNode_initialize()
+										},
+										b3[name]=a;
+									}();
+
+								registerNode(b3[name]);
+
+								break;
+							}
+						}	
+					}
+				}else{
+					alert("请输入参数");
+				}
+					
+				}else if(target.value=="cancel"){
+					
+					var appends=document.getElementsByClassName("appends")[0];
+					appends.style.display="none";
+				}
+}
+(function headerListen(){
 	var headerFlag=[1,1,1,1,1];
 	for(var i=0;i<headers.children.length;i++){
 		let k=i;
@@ -46,11 +189,11 @@ function headerListen(){
 		}
 
 		}
-}
-headerListen();
+})();
 inits();
 var nodes={};
-var b3=this.b3;
+
+
 registerNode(b3.Sequence);
 registerNode(b3.Priority);
 registerNode(b3.MemPriority);
@@ -59,25 +202,25 @@ registerNode(b3.Repeater);
 function registerNode(node){
 	var b=node.prototype.name;
 	nodes[b]=node;
+
+
 }
-var cate=["composite","decorator","condition","action"];
+	var cate=["composite","decorator","condition","action"];
 for(var i=0;i<cate.length;i++){
 	var newlis=document.createElement("li");
 	newlis.className="category";
-	var newspan=document.createElement("div");
-	newspan.className="cate";
+	var newdiv=document.createElement("div");
+	newdiv.className="cate";
 
-	newspan.innerHTML=cate[i];
+	newdiv.innerHTML=cate[i];
 
 	var newul=createCategory(cate[i]);
 	for(var j=0;j<newul.children.length;j++){
 		clickListen(newul.children[j]);
 	}
-	newlis.appendChild(newspan);
+	newlis.appendChild(newdiv);
 	newlis.appendChild(newul);
 	leftcon.appendChild(newlis);
-	
-	//alert(leftcon.innerHTML);
 }
 function createCategory(a){
 	var newul=document.createElement("ul");
@@ -156,11 +299,50 @@ function inits(){
 e1.onclick=function(event){
 	var event=event||window.event;
 	var target=event.target||event.srcElement;
-	var dat={type:"init",title:draws[0].title,root:draws[0].root,display:{x:draws[0].display.x,y:draws[0].display.y},node:{}};
+	var dat={
+			"type":"init",
+			"title":draws[0].title,
+			"root":draws[0].root,
+			"display":{
+				"x":draws[0].display.x,
+				"y":draws[0].display.y
+				},
+			"node":{
+
+			}
+		};
 	var ids=draws[0].root;
 	if(draws[1])
 		dat.node[ids]=exportJSON(dat,draws[1]);
-		alert(JSON.stringify(dat));
+		var newdiv=document.createElement("div");
+		newdiv.className="exports";
+		var newd=document.createElement("div");
+		newd.innerHTML=JSON.stringify(dat);
+		newd.contentEditable=true;
+		newd.className="Jsond";
+
+		newdiv.appendChild(newd);
+		
+
+		newdivs=document.createElement("div");
+		//newdivs.style.background="red";
+		newdivs.className="exsure";
+		newinput1=document.createElement("input");
+		newinput1.type="button";
+		newinput1.value="确定";
+		newinput1.onclick=function(event){
+			var event=event||window.event;
+			target=event.target||event.srcElement;
+			target.parentNode.parentNode.parentNode.removeChild(target.parentNode.parentNode);
+		}
+
+		newdivs.appendChild(newinput1);
+
+		newdiv.appendChild(newdivs);
+
+		body.appendChild(newdiv);
+		
+		//alert(JSON.stringify(dat));
 		data=dat;
 		target.parentNode.parentNode.style.display=null;
 }
@@ -174,7 +356,16 @@ function exportJSON(dat,node){
 		dat.node[ids]=child;
 		childrens.push(child.id);
 	}
-	return {"id":id,"src":node.src,"type":node.type,"display":{"x":node.display.x,"y":node.display.y},"children":childrens};
+	return {
+			"id":id,
+			"src":node.src,
+			"type":node.type,
+			"display":{
+				"x":node.display.x,
+				"y":node.display.y
+			},
+			"children":childrens
+		};
 }
 e2.onclick=function(event){
 	var event=event||window.event;
@@ -183,7 +374,36 @@ e2.onclick=function(event){
 	//alert(JSON.stringify(data));
 	draws=[];
 	lines=[];
-	importJSON(data,0,0,0,data.display.x,data.display.y);
+
+
+	var newdiv=document.createElement("div");
+		newdiv.className="exports";
+		var newd=document.createElement("div");
+		newd.contentEditable=true;
+		newd.className="Jsond";
+		newdiv.appendChild(newd);
+
+		newdivs=document.createElement("div");
+		newdivs.className="exsure";
+		newinput1=document.createElement("input");
+		newinput1.type="button";
+		newinput1.value="确定";
+		newinput1.onclick=function(eve){
+			var eve=eve||window.event;
+			tart=eve.target||eve.srcElement;
+			tart.parentNode.parentNode.parentNode.removeChild(tart.parentNode.parentNode);
+			var da=JSON.parse(tart.parentNode.previousSibling.innerText);
+			//alert(da);
+			//alert(da["display"])
+			importJSON(da,0,0,0,da["display"].x,da["display"].y);
+		}
+		newdivs.appendChild(newinput1);
+		newdiv.appendChild(newdivs);
+		body.appendChild(newdiv);		
+		//data=dat;
+		target.parentNode.parentNode.style.display=null;
+
+	
 	target.parentNode.parentNode.style.display=null;
 }
 function importJSON(dat,k1,lx,ly,x,y){
@@ -195,14 +415,14 @@ function importJSON(dat,k1,lx,ly,x,y){
     	 for(var i=0;i<dat["children"].length;i++){
     	 	var idd=dat["children"][i];
     	 	var node=data.node[idd];
-        	var child=importJSON(node,len,dat.display.x,dat.display.y,node.display.x,node.display.y);
+        	var child=importJSON(node,len,dat["display"].x,dat["display"].y,node["display"].x,node["display"].y);
         	childrens.push(child.id);
         }
-        return {id:id,"type":dat["type"],display:{"x":dat.display.x,"y":dat.display.y},"children":childrens};
+        return {id:id,"type":dat["type"],display:{"x":dat["display"].x,"y":dat["display"].y},"children":childrens};
     }else if(dat["root"]){
     	var idt=dat["root"];
     	var n=data.node[idt];
-    	var nx=importJSON(n,len,dat.display.x,dat.display.y,n.display.x,n.display.y);
+    	var nx=importJSON(n,len,dat["display"].x,dat["display"].y,n["display"].x,n.display.y);
     	var nll={root:idt,"type":dat["type"],display:{"x":dat.display.x,"y":dat.display.y,"node":{}}};
     	nll["node"]=nx;
     	//return 
@@ -256,7 +476,7 @@ function getPos(event){
 /*画布点击 判断是移动图像还是划线*/
 mycanvas.onmousedown=function(event){
 	var event=event||window.event;
-
+	//alert(hei+" w "+wid);
 	//alert(draws[0].display.y);
 	if(event.which==1){
 		var pos=getPos(event);
