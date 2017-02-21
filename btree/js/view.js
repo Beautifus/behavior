@@ -173,26 +173,37 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 
 	}
 	view.prototype.drawCondition=function(v,x,y){
+		//alert(type);
+		this.drawleft(v,x,y,6,20,2);
+		this.drawRight(v,x,y,40,6,20,2);
+		v.fillStyle="white";
+		v.strokeStyle="#787372";
+		v.lineWidth=2;
 		v.beginPath();
-		v.strokeStyle="blue";
-		v.lineTo(x+4,y+19);
-		v.lineTo(x+35,y+19);
+		v.moveTo(x+10,y);
+		v.arcTo(x+40,y,x+40,y+40,15);
+		v.arcTo(x+40,y+40,x,y+40,15);
+		v.arcTo(x,y+40,x,y,15);
+		v.arcTo(x,y,x+40,y,15);
+		v.fill();
 		v.stroke();
 		v.closePath();
 	}
-	view.prototype.drawCondition=function(v,x,y){
-		v.beginPath();
-		v.strokeStyle="green";
-		v.lineTo(x+4,y+19);
-		v.lineTo(x+35,y+19);
-		v.stroke();
-		v.closePath();
-	}
+
 	view.prototype.drawAction=function(v,x,y){
+		//alert(type);
+		this.drawleft(v,x,y,6,20,2);
+		this.drawRight(v,x,y,40,6,20,2);
+		v.fillStyle="white";
+		v.strokeStyle="#787372";
+		v.lineWidth=2;
 		v.beginPath();
-		v.strokeStyle="green";
-		v.lineTo(x+4,y+19);
-		v.lineTo(x+35,y+19);
+		v.moveTo(x+10,y);
+		v.arcTo(x+40,y,x+40,y+40,15);
+		v.arcTo(x+40,y+40,x,y+40,15);
+		v.arcTo(x,y+40,x,y,15);
+		v.arcTo(x,y,x+40,y,15);
+		v.fill();
 		v.stroke();
 		v.closePath();
 	}
