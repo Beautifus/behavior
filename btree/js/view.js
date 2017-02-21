@@ -18,7 +18,7 @@ view.prototype.redraw=function(x,y,w,z){
 }
 view.prototype.drawCicle=function(v,src,type,x,y){
 	if(src!="init"){
-		alert(src);
+		//alert(src);
 		//this.drawPic(v,x,y);
 		switch(src){
 			case "composite":
