@@ -18,7 +18,7 @@ view.prototype.redraw=function(x,y,w,z){
 }
 view.prototype.drawCicle=function(v,src,type,x,y){
 	if(src!="init"){
-		
+		alert(src);
 		//this.drawPic(v,x,y);
 		switch(src){
 			case "composite":
@@ -172,7 +172,7 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		this.drawRight(v,x,y,100,6,0,2);
 
 	}
-	view.prototype.drawCondition=function(v,x,y){
+	view.prototype.drawCondition=function(v,type,x,y){
 		//alert(type);
 		this.drawleft(v,x,y,6,20,2);
 		this.drawRight(v,x,y,40,6,20,2);
@@ -190,7 +190,7 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 		v.closePath();
 	}
 
-	view.prototype.drawAction=function(v,x,y){
+	view.prototype.drawAction=function(v,type,x,y){
 		//alert(type);
 		this.drawleft(v,x,y,6,20,2);
 		this.drawRight(v,x,y,40,6,20,2);
