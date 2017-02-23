@@ -686,7 +686,7 @@ mycanvas.onmousedown=function(event){
 				var res=checkCate(x,y);
 				var w=res.w;
 				//alert(lx+"lx ly "+ly);
-				if(w!=-1&&lx!=0&&ly!=0){
+				if(w!=-1&&lx!=0&&ly!=0&& w!=flag){
 					v.redraw();
 					var x=res.x;
 					var y=res.y;
@@ -716,17 +716,21 @@ mycanvas.onmousedown=function(event){
 		}
 
 	}else if(event.which==3){
-		alert(draws[1].childs.length);
+		//alert(draws[1].childs.length);
 		var event=event||window.event;
 		var poss=getPos(event);
 		x=poss.x;
 		y=poss.y;
 		var res=checkCate(x,y);
 		var w=res.w;
+		var n=lines.length
 		if(w!=-1){
-			for(var i=0;i<lines.length;i++){
+			for(var i=0;i<n;i++){
+				//alert(lines[i].k1+" "+lines[i].k2);
 				if(lines[i].k1==w||lines[i].k2==w){
 					lines.splice(i,1);
+					i-=1;
+					n-=1;
 				}
 			}
 			draws.splice(w,1);
