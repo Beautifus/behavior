@@ -9,9 +9,12 @@ view.prototype.redraw=function(x,y,w,z){
 				v.drawCicle(cont,poss.type,poss.src,poss.display.x,poss.display.y);
 			} 
 			for(var j=0;j<lines.length;j++){
+				draws[lines[j].k1].childs=[];
+			}
+			for(var j=0;j<lines.length;j++){
 				//alert(j)
 				v.drawLine(cont,lines[j].lx,lines[j].ly,lines[j].x,lines[j].y);
-				draws[lines[j].k1].children.push(lines[j].k2);
+				draws[lines[j].k1].childs.push(lines[j].k2);
 			}
 		
 	//alert(draws.length);
@@ -89,12 +92,6 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 				this.drawMemPriority(v,x,y);
 				break;
 		}
-		/*v.beginPath();
-		v.strokeStyle="red";
-		v.lineTo(x+4,y+19);
-		v.lineTo(x+35,y+19);
-		v.stroke();
-		v.closePath();*/
 	}
 	view.prototype.drawSequence=function(v,x,y){
 		v.beginPath();

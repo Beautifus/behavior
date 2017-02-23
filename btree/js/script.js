@@ -6,10 +6,11 @@ con.innerHTML="composite";
 var conChild=document.createElement("ul");
 conChild.className="comchild";
 conChild.id="conul";
+var checked;
 conChild.innerHTML="<li>sequence</li><li>dom</li>";
 con.appendChild(conChild);
 var addcus=document.getElementById("addcus");
-
+var rightcon=document.getElementById("right");
 var src="";
 var lineIn="lineIn",lineOut="lineOut";
 var treejs={};
@@ -19,11 +20,14 @@ var headers=document.getElementsByClassName("header")[0];
 var edite=document.getElementById("edit");
 var editeFlag=1;
 var body=document.getElementById("body");
+var tips=document.getElementById("tips");
+var myform=document.getElementById("myform");
+
 var b3=this.b3;
 (function(){
 	var newdiv=document.createElement("div");//最外层
 	newdiv.className="appends";
-	
+	newdiv.style.display="none";
 	var newp=document.createElement("div");//第一层
 	newp.innerHTML="Add Nodes";
 	newp.style.textAlign="center";
@@ -54,28 +58,22 @@ var b3=this.b3;
 
 	newdiv.appendChild(newdiv2);
 	newdiv.appendChild(newdiv3);
-	
+	body.appendChild(newdiv);
 	addcus.onclick=function(){
-
-	var mydiv=document.getElementsByClassName("appends")[0];
-	if(!mydiv){
-			body.appendChild(newdiv);
-			addcho();
-	}else{
-			var mydiv=document.getElementsByClassName("appends")[0];
-			var parent=mydiv.querySelectorAll("div")[1];
-			var onenodes=document.getElementsByClassName("onenode");
-				//alert(onenodes.length)
-			if(onenodes.length){
-					for(var i=0;i<onenodes.length;i++){
-						parent.removeChild(onenodes[i]);
-					}
+		var mydiv=document.getElementsByClassName("appends")[0];
+		mydiv.style.display="block";
+		var parent=mydiv.querySelectorAll("div")[1];
+		var onenodes=document.getElementsByClassName("onenode");
+		if(onenodes.length){
+			for(var i=0;i<onenodes.length;i++){
+				parent.removeChild(onenodes[i]);
 			}
-			mydiv.style.display="block";
-			addcho();
+		}
+		mydiv.style.display="block";
+			//parent.innerHTML="";
+		addcho();
 
 	}
-};
 })();
 function addcho(){
 	var mydiv=document.getElementById("addnodes");
@@ -152,6 +150,9 @@ function addCaclick(event){
 							}
 						}	
 					}
+					var parent=target.parentNode.parentNode;
+					parent.style.display="none";
+					//parentNode.removeChild(parent);//<div><div><div><input>  </div></div></div>
 				}else{
 					alert("请输入参数");
 				}
@@ -202,8 +203,6 @@ registerNode(b3.Repeater);
 function registerNode(node){
 	var b=node.prototype.name;
 	nodes[b]=node;
-
-
 }
 	var cate=["composite","decorator","condition","action"];
 for(var i=0;i<cate.length;i++){
@@ -262,14 +261,26 @@ function clickListen(a){
 		}
 		//alert(divX+" "+divY);
 		var d=v.drawCicle(cont,type,src,divX,divY); 
-		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,children:[],});
+		/*for(var k in nodes){
+			alert(nodes[k].prototype.title);
+		}*/
+		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,childs:[],title:src,description:"",Parameters:[],Properties:[]});
+          tips.style.display="none";
+         myform.style.display="block";
+         //alert(nodes[src].prototype.name);
+          myform["title"].value=src;
+          myform["description"].value=nodes[src].prototype.description;
+          checked=draws.length-1;
+          parametersTable.innerHTML="";
+          propertiesTable.innerHTML="";
             d.redraw();
             var len=draws.length-1;
+            
 		document.onmousemove=function(event){
 			var e=event||window.event;
 			var po=getPos(event);
-			 posx=po.x
-			 posy=po.y
+			 posx=po.x;
+			 posy=po.y;
 			 draws[len].display.x=posx;
 			 draws[len].display.y=posy;
 			 d.redraw();
@@ -294,7 +305,12 @@ function createUUID(){
 }
 function inits(){
 	v.drawCicle(cont,"init",0,300,200);
-	draws.push({title:"btree",display:{x:300,y:200},src:"init",type:"init",root:"",children:[]});
+	draws.push({title:"btree",display:{x:300,y:200},src:"init",type:"init",root:"",description:"",childs:[],Parameters:[],Properties:[]});
+}
+function titleChange(event){
+	var event=event||window.event;
+	var target=event.target||event.srcElement;
+	draws[checked].title=target.value;
 }
 e1.onclick=function(event){
 	var event=event||window.event;
@@ -303,6 +319,9 @@ e1.onclick=function(event){
 			"type":"init",
 			"title":draws[0].title,
 			"root":draws[0].root,
+			"description":draws[0].description,
+			"Properties":draws[0].Properties,
+			"Parameters":draws[0].Parameters,
 			"display":{
 				"x":draws[0].display.x,
 				"y":draws[0].display.y
@@ -322,10 +341,7 @@ e1.onclick=function(event){
 		newd.className="Jsond";
 
 		newdiv.appendChild(newd);
-		
-
 		newdivs=document.createElement("div");
-		//newdivs.style.background="red";
 		newdivs.className="exsure";
 		newinput1=document.createElement("input");
 		newinput1.type="button";
@@ -337,21 +353,19 @@ e1.onclick=function(event){
 		}
 
 		newdivs.appendChild(newinput1);
-
 		newdiv.appendChild(newdivs);
 
 		body.appendChild(newdiv);
 		
-		//alert(JSON.stringify(dat));
-		data=dat;
+		//data=dat;
 		target.parentNode.parentNode.style.display=null;
 }
 function exportJSON(dat,node){
 	var childrens=[];
-	var node=node;
 	var id=node.id;
-	for(var i=0;i<node.children.length;i++){
-		var child=exportJSON(dat,draws[node.children[i]]);
+
+	for(var i=0;i<node.childs.length;i++){
+		var child=exportJSON(dat,draws[node.childs[i]]);
 		var ids=child.id;
 		dat.node[ids]=child;
 		childrens.push(child.id);
@@ -364,7 +378,11 @@ function exportJSON(dat,node){
 				"x":node.display.x,
 				"y":node.display.y
 			},
-			"children":childrens
+			"childs":childrens,
+			"title":node.title,
+			"description":node.description,
+			"Parameters":node.Parameters,
+			"Properties":node.Properties
 		};
 }
 e2.onclick=function(event){
@@ -375,6 +393,9 @@ e2.onclick=function(event){
 	draws=[];
 	lines=[];
 
+
+
+//{"type":"init","title":"btree","root":"98fd0431-e3dc-44a1-855c-be360ea68a10","description":"","Properties":[],"Parameters":[],"display":{"x":300,"y":200},"node":{"5ec6ef05-5535-4075-85b8-624518629a34":{"id":"5ec6ef05-5535-4075-85b8-624518629a34","src":"sequence","type":"composite","display":{"x":528,"y":218},"children":[],"title":"sequence","description":"","Parameters":[{"key":"qwe","value":" 而非地方"},{"key":"我r","value":" 而而"}],"Properties":[{"key":"我去额","value":"额"},{"key":"而","value":"而"}]},"98fd0431-e3dc-44a1-855c-be360ea68a10":{"id":"98fd0431-e3dc-44a1-855c-be360ea68a10","src":"Priority","type":"composite","display":{"x":434,"y":209},"children":["5ec6ef05-5535-4075-85b8-624518629a34","5ec6ef05-5535-4075-85b8-624518629a34"],"title":"Priority","description":"","Parameters":[{"key":"算法","value":"地方"}],"Properties":[{"key":"地方","value":"多发的"}]}}}
 
 	var newdiv=document.createElement("div");
 		newdiv.className="exports";
@@ -388,14 +409,16 @@ e2.onclick=function(event){
 		newinput1=document.createElement("input");
 		newinput1.type="button";
 		newinput1.value="确定";
+		var dat;
 		newinput1.onclick=function(eve){
 			var eve=eve||window.event;
 			tart=eve.target||eve.srcElement;
 			tart.parentNode.parentNode.parentNode.removeChild(tart.parentNode.parentNode);
-			var da=JSON.parse(tart.parentNode.previousSibling.innerText);
-			//alert(da);
-			//alert(da["display"])
-			importJSON(da,0,0,0,da["display"].x,da["display"].y);
+			var str='"'+tart.parentNode.previousSibling.innerHTML+'"';
+			 dat=JSON.parse(tart.parentNode.previousSibling.innerText);
+			 var data=dat;
+			importJSON(data,dat,0,0,0,dat["display"].x,dat["display"].y);
+			//alert(JSON.stringify(draws));
 		}
 		newdivs.appendChild(newinput1);
 		newdiv.appendChild(newdivs);
@@ -406,26 +429,25 @@ e2.onclick=function(event){
 	
 	target.parentNode.parentNode.style.display=null;
 }
-function importJSON(dat,k1,lx,ly,x,y){
+function importJSON(data,dat,k1,lx,ly,x,y){
     imjs(dat,k1,lx,ly,x,y);
     var childrens=[];
     var id=dat.id;
     var len=draws.length-1;
-    if(dat["children"]){
-    	 for(var i=0;i<dat["children"].length;i++){
-    	 	var idd=dat["children"][i];
+    if(dat["childs"]){
+    	 for(var i=0;i<dat["childs"].length;i++){
+    	 	var idd=dat["childs"][i];
     	 	var node=data.node[idd];
-        	var child=importJSON(node,len,dat["display"].x,dat["display"].y,node["display"].x,node["display"].y);
+        	var child=importJSON(data,node,len,dat["display"].x,dat["display"].y,node["display"].x,node["display"].y);
         	childrens.push(child.id);
         }
-        return {id:id,"type":dat["type"],display:{"x":dat["display"].x,"y":dat["display"].y},"children":childrens};
+        return {id:id,"type":dat["type"],display:{"x":dat["display"].x,"y":dat["display"].y},"childs":childrens};
     }else if(dat["root"]){
     	var idt=dat["root"];
-    	var n=data.node[idt];
-    	var nx=importJSON(n,len,dat["display"].x,dat["display"].y,n["display"].x,n.display.y);
-    	var nll={root:idt,"type":dat["type"],display:{"x":dat.display.x,"y":dat.display.y,"node":{}}};
+    	var n=dat.node[idt];
+    	var nx=importJSON(data,n,len,dat["display"].x,dat["display"].y,n["display"].x,n.display.y);
+    	var nll={title:dat["title"],description:dat["description"],root:idt,"type":dat["type"],display:{"x":dat.display.x,"y":dat.display.y,"node":{}}};
     	nll["node"]=nx;
-    	//return 
     	return nll;
 
    
@@ -436,9 +458,9 @@ function imjs(data,k1,lx,ly,x,y){
     var type=data["type"];
     var id=data["id"];
     if(id){
-    	draws.push({id:id,display:{x:parseInt(x),y:parseInt(y)},src:t,type:type,children:[]});
+    	draws.push({id:id,display:{x:parseInt(x),y:parseInt(y)},title:t,src:t,type:type,title:data.title,description:data.description,childs:data.childs,Parameters:data.Parameters,Properties:data.Properties});
     }else{
-    	draws.push({title:data.title,src:t,type:type,root:data["root"],display:{x:x,y:y},children:[]});
+    	draws.push({title:data.title,src:t,type:type,root:data["root"],display:{x:x,y:y},description:data.description,childs:data.childs,Parameters:data.Parameters,Properties:data.Properties});
     }
     if(lx&&ly){
     	var k2=draws.length-1;
@@ -451,16 +473,6 @@ function imjs(data,k1,lx,ly,x,y){
         v.drawCicle(cont,type,t,parseInt(x),parseInt(y));
     }
 }
-
-function getp(event){
-	var e=event||window.event;
-		var scrollX=document.body.scrollLeft||document.documentElement.scrollLeft;
-		var scrollY=document.body.scrollTop||document.documentElement.scrollTop;
-		var x=e.clientX||e.clientX+scrollX;
-		var y=e.clientY||e.clientY+scrollY;
-		return {x:x,y:y};
-}
-
 function getPos(event){
 		var e=event||window.event;
 		var scrollX=document.body.scrollLeft||document.documentElement.scrollLeft;
@@ -470,65 +482,173 @@ function getPos(event){
 		//alert(scrollY+"scr");
 		var y=scrollY?e.clientY+scrollY:e.clientY;
 		y=y-hei;
-		//alert(y);
 		return {x:x,y:y};
+}
+function addParameter(type,target,key,value){
+	//target.innerHTML="";
+	var div=document.createElement("div");
+	div.className="addpara";
+    var newkey=document.createElement("input");
+    newkey.placeholder="key";
+    if(key){
+    	newkey.value=key;
+    }else{
+    	newkey.value="";
+    }
+    newkey.className="key";
+    
+    var newvalue=document.createElement("input");
+     if(value){
+    	newvalue.value=value;
+    }else{
+    	newvalue.value="";
+    } 
+    newvalue.className="value";
+    newvalue.placeholder="value";
+    newkey.onchange=function(eve){
+    	var eve=eve||window.event;
+		var target=eve.target||eve.srcElement;
+		newkey.value=target.value;
+			
+    }
+   newvalue.onchange=function(eve){
+    		var eve=eve||window.event;
+			var targ=eve.target||eve.srcElement;
+			newvalue.value=targ.value;
+			switch(type){
+				case "Parameters":
+					draws[checked]["Parameters"].push({key:newkey.value,value:newvalue.value});
+					//alert(checked+" "+draws[checked]["Parameters"].length);
+					break;
+				case "Properties":
+					draws[checked]["Properties"].push({key:newkey.value,value:newvalue.value});
+					break;
+			}
+   	 	}
+    var newoper=document.createElement("input");
+    newoper.className="operator";
+    newoper.value="-";
+    newoper.onclick=function(event){
+		var event=event||window.event;
+		var target=event.target||event.srcElement;
+		var parent=target.parentNode;
+		parent.parentNode.removeChild(parent);
+		switch(type){
+			case "Parameters":
+			//alert(draws[checked]["Parameters"].length);
+			//alert(draws[checked]["Parameters"][0].key+"  "+draws[checked]["Parameters"][0].value)
+				for(var p=0;p<draws[checked]["Parameters"].length;p++){
+						if(draws[checked]["Parameters"][p].key==newkey.value&&draws[checked]["Parameters"][p].value==newvalue.value){
+							draws[checked]["Parameters"].splice(p,1);
+							//alert(draws[checked]["Parameters"].length)
+							//draws[checked]["Parameters"].length
+							//break;
+						}
+				}
+				break;
+			case "Properties":
+					for(var p=0;p<draws[checked]["Properties"].length;p++){
+						if(draws[checked]["Properties"][p].key==newkey.value&&draws[checked]["Properties"][p].value==newvalue.value){
+							draws[checked]["Properties"].splice(p,1);
+							break;
+						}
+				}
+					break;
+			}
+			
+	}
+    div.appendChild(newkey);
+    div.appendChild(newvalue);
+    div.appendChild(newoper);
+    //parametersTable.appendChild(div);
+   target.appendChild(div);
+}
+function descriptionChange(event){
+	var event=event||window.event;
+	var target=event.target||event.srcElement;
+	draws[checked].description=target.value;
 }
 /*画布点击 判断是移动图像还是划线*/
 mycanvas.onmousedown=function(event){
 	var event=event||window.event;
-	//alert(hei+" w "+wid);
-	//alert(draws[0].display.y);
 	if(event.which==1){
 		var pos=getPos(event);
 		//alert(pos.y);
 		var k=-1,x=0,y=0,lx=0,ly=0,flag=-1,key;
 		for(var i=0;i<draws.length;i++){
 			if(draws[i].type=="composite"||draws[i].type=="condition"||draws[i].type=="action"||draws[i].type=="init"){
-				//alert(pos.x>=draws[i].display.x&&pos.x<=draws[i].display.x+40&&pos.y>=draws[i].display.y&&pos.y<=draws[i].display.y+40);
-				if(pos.x>=draws[i].display.x&&pos.x<=draws[i].display.x+40&&pos.y>=draws[i].display.y&&pos.y<=draws[i].display.y+40){
+				if(pos.x>=draws[i].display.x&&pos.x<=parseInt(draws[i].display.x)+40&&pos.y>=draws[i].display.y&&pos.y<=parseInt(draws[i].display.y)+40){
 					
 					k=i;
-					//alert(k);
 					x=draws[k].display.x;
 					y=draws[k].display.y;
+          			
 					break;
-				}else if(pos.x>=draws[i].display.x-9&&pos.x<draws[i].display.x&&pos.y>=draws[i].display.y+14&&pos.y<=draws[i].display.y+26){
+				}else if(pos.x>=draws[i].display.x-9&&pos.x<draws[i].display.x&&pos.y>=parseInt(draws[i].display.y)+14&&pos.y<=parseInt(draws[i].display.y)+26){
 					flag=i;
 					key="left";
 					lx=draws[i].display.x-9;
-					ly=draws[i].display.y+20;
+					ly=parseInt(draws[i].display.y)+20;
 					break;
-				}else if(pos.x>draws[i].display.x+40&&pos.x<=draws[i].display.x+49&&pos.y>=draws[i].display.y+14&&pos.y<=draws[i].display.y+26){
+				}else if(pos.x>parseInt(draws[i].display.x)+40&&pos.x<=parseInt(draws[i].display.x)+49&&pos.y>=parseInt(draws[i].display.y)+14&&pos.y<=parseInt(draws[i].display.y)+26){
 					flag=i;
 					key="right";
-					lx=draws[i].display.x+49;
-					ly=draws[i].display.y+20;
+					lx=parseInt(draws[i].display.x)+49;
+					ly=parseInt(draws[i].display.y)+20;
 					break;
 				}
 			}else if(draws[i].type=="decorator"){
-				if(pos.x>=draws[i].display.x-100&&pos.x<=draws[i].display.x+100&&pos.y>=draws[i].display.y-30&&pos.y<=draws[i].display.y+30){
+				if(pos.x>=draws[i].display.x-100&&pos.x<=parseInt(draws[i].display.x)+100&&pos.y>=draws[i].display.y-30&&pos.y<=parseInt(draws[i].display.y)+30){
 					k=i;
 					x=draws[k].display.x;
 					y=draws[k].display.y;
 					break;
-				}else if(pos.x>=draws[i].display.x-109&&pos.x<draws[i].display.x-100&&pos.y>=draws[i].display.y-6&&pos.y<=draws[i].display.y+6){
+				}else if(pos.x>=draws[i].display.x-109&&pos.x<draws[i].display.x-100&&pos.y>=draws[i].display.y-6&&pos.y<=parseInt(draws[i].display.y)+6){
 					flag=i;
 					key="left";
 					lx=draws[i].display.x-109;
 					ly=draws[i].display.y;
 					break;
-				}else if(pos.x>draws[i].display.x+100&&pos.x<=draws[i].display.x+109&&pos.y>=draws[i].display.y-6&&pos.y<=draws[i].display.y+6){
+				}else if(pos.x>parseInt(draws[i].display.x)+100&&pos.x<=parseInt(draws[i].display.x)+109&&pos.y>=draws[i].display.y-6&&pos.y<=parseInt(draws[i].display.y)+6){
 					flag=i;
 					key="right";
-					lx=draws[i].display.x+109;
+					lx=parseInt(draws[i].display.x)+109;
 					ly=draws[i].display.y;
 					break;
 				}
 			}
 		}
+			if(k+1){
+				checked=k;
+          		tips.style.display="none";
+				myform.style.display="block";
+				myform["title"].value=draws[checked].title;
+       			myform["description"].value=draws[checked].description;
+       			var parameter=draws[checked]["Parameters"];
+       			parametersTable.innerHTML="";
+       			propertiesTable.innerHTML="";
+       			if(parameter.length){
+       				for(var m=0;m<parameter.length;m++){
+       					addParameter("Parameters",parametersTable,parameter[m].key,parameter[m].value);
+          			}
+          		}else{
+          			parametersTable.innerHTML="";	
+          		}
+          		var properties=draws[checked]["Properties"];
+          		if(properties.length){
+         			for(var j=0;j<properties.length;j++){
+          				addParameter("Properties",propertiesTable,properties[j].key,properties[j].value);
+          			}
+          		}else{
+         			propertiesTable.innerHTML="";
+          		}
+			}else{
+				tips.style.display="block";
+				myform.style.display="none";
+			}
+				
 		mycanvas.onmousemove=function(event){
 			var event=event||window.event;
-
 			var poss=getPos(event);
 				x=poss.x;
 				y=poss.y;
@@ -538,19 +658,18 @@ mycanvas.onmousedown=function(event){
 				}else if(k>=0){
 					draws[k].display.x=x;
 		        	draws[k].display.y=y;
-		        	
 		        	for(var j=0;j<lines.length;j++){
 		        		if(lines[j].k2==k&&(draws[k].type=="composite"||draws[i].type=="condition"||draws[i].type=="action"||draws[k].type=="init")){
 		        			lines[j].x=draws[k].display.x-9;
-		        			lines[j].y=draws[k].display.y+20;
+		        			lines[j].y=parseInt(draws[k].display.y)+20;
 		        		}else if(lines[j].k2==k&&(draws[k].type=="decorator")){
 		        			lines[j].x=draws[k].display.x-109;
 		        			lines[j].y=draws[k].display.y;
 		        		}else if(lines[j].k1==k&&(draws[k].type=="composite"||draws[i].type=="condition"||draws[i].type=="action"||draws[k].type=="init")){
-		        			lines[j].lx=draws[k].display.x+49;
-		        			lines[j].ly=draws[k].display.y+20;
+		        			lines[j].lx=parseInt(draws[k].display.x)+49;
+		        			lines[j].ly=parseInt(draws[k].display.y)+20;
 		        		}else if(lines[j].k1==k&&(draws[k].type=="decorator")){
-		        			lines[j].lx=draws[k].display.x+109;
+		        			lines[j].lx=parseInt(draws[k].display.x)+109;
 		        			lines[j].ly=draws[k].display.y;
 		        		}
 		        	}
@@ -560,6 +679,7 @@ mycanvas.onmousedown=function(event){
 			mycanvas.onmousemove=null; //将move清除
 			mycanvas.onmouseup=null;
 			var event=event||window.event;
+
 			var poss=getPos(event);
 				x=poss.x;
 				y=poss.y;
@@ -570,25 +690,33 @@ mycanvas.onmousedown=function(event){
 					v.redraw();
 					var x=res.x;
 					var y=res.y;
-					if(draws[w].type=="composite"||draws[i].type=="condition"||draws[i].type=="action"){
-						v.drawLine(cont,lx,ly,draws[w].display.x-9,draws[w].display.y+20);
-						lines.push({lx:lx,ly:ly,x:draws[w].display.x-9,y:draws[w].display.y+20,k1:flag,k2:w});
-
+					//alert(""+x+" x y "+y);
+					//alert(draws[w].display.x-9+" "+(parseInt(draws[w].display.y)+20))
+					if(draws[w].type=="composite"||draws[w].type=="condition"||draws[w].type=="action"){
+						//alert(draws[w].display.x-9+" "+(parseInt(draws[w].display.y)+20))
+						v.drawLine(cont,lx,ly,draws[w].display.x-9,parseInt(draws[w].display.y)+20);
+						lines.push({lx:lx,ly:ly,x:draws[w].display.x-9,y:parseInt(draws[w].display.y)+20,k1:flag,k2:w});
 					}else{
 						v.drawLine(cont,lx,ly,draws[w].display.x-109,draws[w].display.y);
 						lines.push({lx:lx,ly:ly,x:draws[w].display.x-109,y:draws[w].display.y,k1:flag,k2:w});
 					}
-					if(flag>=-1)
-						draws[flag].children.push(w);
-					if(flag==0){
-					draws[0].root=draws[w].id;
+					if(flag>=-1){
+						//alert(flag+" "+w);
+						draws[flag].childs.push(w);
+						if(flag==0){
+							//alert("true");
+						draws[0].root=draws[w].id;
+						}
 					}
 				}else{	
+					
 					v.redraw();
 				}
 				
 		}
+
 	}else if(event.which==3){
+		alert(draws[1].childs.length);
 		var event=event||window.event;
 		var poss=getPos(event);
 		x=poss.x;
@@ -612,6 +740,8 @@ function checkCate(x,y){
 	var w=-1;
 	for(var i=0;i<draws.length;i++){
 			if(draws[i].type=="composite"|| draws[i].type=="condition"||draws[i].type=="action"||draws[i].type=="init"){
+				draws[i].display.x=parseInt(draws[i].display.x);
+				draws[i].display.y=parseInt(draws[i].display.y);
 				if((x>=draws[i].display.x-9&&x<draws[i].display.x&&y>=draws[i].display.y+14&&y<=draws[i].display.y+26)||(x>=draws[i].display.x&&x<=draws[i].display.x+40&&y>=draws[i].display.y&&y<=draws[i].display.y+40)){
 					x=draws[i].display.x-9;
 					y=draws[i].display.y+20;

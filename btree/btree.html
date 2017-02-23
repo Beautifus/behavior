@@ -97,10 +97,54 @@
 			</div>
 		</div>
 		<div class="content" id="content">
-			<canvas id="mycanvas" width="800" height="1000"></canvas>
+			<canvas id="mycanvas" width="800" height="515"></canvas>
 		</div>
 		<div class="right">
-			
+			<div id="tabs">
+				<span>
+					<a href="#">PROPERTIES</a>
+				</span>
+			</div>
+			<div id="tabContent">
+				<div id="tips" >
+					<p >
+						Select a single block to change its properties
+						</p>
+					<p>
+						NOTE:The root node represents a tree.
+						Therefore,changes applied to this node will persist on the tree object.
+					</p>
+				</div>
+				<form id="myform" style="display:none">
+					<div id="properties" >
+					<div style="margin-top:20px">
+						<label for="title">
+						Title
+						<input type="text" id="title" placeholder="Node Title" onkeyup="titleChange(event)">
+						</label>
+					</div>
+					<div style="margin-top:20px">
+						<label for="description">Description</label>
+						<input type="text" placeholder="Node description" id="description" onchange="descriptionChange(event)">
+						
+					</div>
+					<div style="margin-top:20px">
+						<label>Parameters</label><div id="editable-operator">
+							<input type="button" id="parameter" id="parameters" class="operator" value="+" onclick='addParameter("Parameters",parametersTable,null,null)'>
+						</div><div id="parameters-table">
+						</div>
+					</div>
+					<div style="margin-top:20px">
+						<label>Properties</label><div id="editable-operator">
+								<input type="button" class="operator" id="propertie" value="+" onclick='addParameter("Properties",propertiesTable,null,null)'>
+						</div><div id="properties-table">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+				</form>
+				
 		</div>
 	</div>
 </body>
@@ -109,23 +153,13 @@
 	var cont=mycanvas.getContext('2d');
 	var draws=[];
 	var lines=[];//lx，ly起始点,x,y终止点，k1，起始点图像，框终止点图像
+	var data;
+	var parametersTable=document.getElementById("parameters-table");
+	var propertiesTable=document.getElementById("properties-table");
 </script>
 
 	<script type="text/javascript" src="./js/core.js"></script>
 	<script type="text/javascript" src="./js/tree.js"></script>
 	<script type="text/javascript" src="./js/view.js"></script>
 	<script type="text/javascript" src="./js/script.js"></script>
-
-<!--
-
-
-<script type="text/javascript" src="https://rawgit.com/Beautifus/behavior-tree/master/betree/js/core.js"></script>
-	<script type="text/javascript" src="https://rawgit.com/Beautifus/behavior-tree/master/betree/js/tree.js"></script>
-	<script type="text/javascript" src="https://rawgit.com/Beautifus/behavior-tree/master/betree/js/view.js"></script>
-	<script type="text/javascript" src="https://rawgit.com/Beautifus/behavior-tree/master/betree/js/script.js"></script>
-	<script type="text/javascript" src="./js/core.js"></script>
-	<script type="text/javascript" src="./js/tree.js"></script>
-	<script type="text/javascript" src="./js/view.js"></script>
-	<script type="text/javascript" src="./js/script.js"></script>
--->
 </html>
