@@ -101,9 +101,10 @@ function addCaclick(event){
 							var name=onenodes[i].querySelectorAll("input")[0].value;
 							var title=onenodes[i].querySelectorAll("input")[1].value;
 							var category=onenodes[i].querySelector("select").value;
-
 							var cates=document.getElementsByClassName("conul");
-							var categ=String.toLowerCase(category);
+							alert(category);
+							var categ=category.toLowerCase();
+							alert(categ+" cc "+category);
 							one:for(var j=0;j<cates.length;j++){
 								if(cates[j].previousSibling.innerHTML==categ){
 									for(var k=0;k<cates[j].children.length;k++){
