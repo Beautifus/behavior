@@ -28,6 +28,7 @@ a{
 	/*border:1px solid silver;
 	background-color:rgba(180,190,180,0.4);*/
 	display:flex;
+
 }
 .header>li{
 	display:inline-block;
@@ -107,9 +108,7 @@ a{
 	border-radius: 5px;
 	cursor: pointer;
 }
-#addnodes {
-	background-color:rgba(180,190,180,0.2);
-}
+
 .right{
 	width:17%;
 	float:right;
@@ -128,7 +127,19 @@ label{
 	height:30px;
 	border:1px solid rgba(180,190,180,0.4);
 }
-
+.editadd{
+	float:right;
+	border:0px;
+	background-color: inherit;
+	width:50px;
+	height:100%;
+	text-align: center;
+	line-height: 14px;
+	color:#2f2b2a;	
+}
+.conul li:hover input{
+	color:white;
+}
 #properties{
 	margin-top:20px;
 	height:100%;
@@ -207,6 +218,20 @@ label{
 }
 .adda{
 	margin-top:20px;
+	margin-bottom:20px;
+	padding-bottom:20px;
+	width:95%;
+	margin:0px auto 0px auto;
+}
+#addnodes {
+	background-color:rgba(180,190,180,0.2);
+	margin-bottom:20px;
+	vertical-align: middle;
+}
+.addnodes-input{
+	height:80%;
+	flex:1;
+	margin-top:15px;
 }
 .appends{
 	position:fixed;
@@ -214,6 +239,7 @@ label{
 	left:23%;
 	width:600px;
 	margin:0 auto 0 auto;
+	text-align:center;
 	background-color:rgba(180,190,180,0.3);
 }
 .onenode{
@@ -221,7 +247,9 @@ label{
 	clear:both;
 	height:30px;
 	display: block;
+	vertical-align: middle;
 	margin-top: 10px;
+	margin-bottom:10px;
 }
 .cadd{
 	clear:both;
@@ -278,6 +306,32 @@ input,select{
 option{
 	color:black;
 }
+.edit-remove{
+	background-color:#f0320b;
+	float:left;
+	margin-left:20px;
+	width:20%;
+	height:95%;
+	border:0px;
+	margin-top:10px;
+}
+.edit-cancel{
+	background-color:rgba(0,0,0,0,0.3);
+	border:0px;
+	width:20%;
+	height:95%;
+	margin-top:10px;
+	float:right;
+}
+.edit-add{
+	background-color:#1f92ee;
+	border:0px;
+	width:20%;
+	height:95%;
+	float:right;
+	margin-top:10px;
+	margin-right:10px;
+}
 .operator{
 	height:100%;
 	margin-bottom:10px;
@@ -313,12 +367,17 @@ option{
 	list-style:none;
 	
 }
-.conul li{
+.conul li label{
 	font-size:15px;
 	margin-top:6px;
+	color:white;
+}
+.conul li label:hover{
+	cursor: pointer;
 }
 .conul li:hover{
-	cursor: pointer;
+	background:rgba(180,190,180,0.1);
+	color:white;
 }
 .comchild{
 	padding-left:20px;

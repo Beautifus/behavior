@@ -31,7 +31,8 @@ var b3=this.b3;
 	var newp=document.createElement("div");//第一层
 	newp.innerHTML="Add Nodes";
 	newp.style.textAlign="center";
-
+	newp.style.height="30px";
+	newp.style.lineHeight="30px";
 	newdiv.appendChild(newp);
 
 	var newdiv2=document.createElement("div");//第二层中
@@ -41,6 +42,7 @@ var b3=this.b3;
 	var newli1=document.createElement("div");//第二层中的第一层
 	newli1.style.width="100%";
 	newli1.style.height="30px";
+	newli1.style.marginBottom="10px";
 	
 	var newinput=document.createElement("input");
 	newinput.value="+";
@@ -99,25 +101,27 @@ function addCaclick(event){
 					if(onenodes.length){
 						for(var i=0;i<onenodes.length;i++){
 							var name=onenodes[i].querySelectorAll("input")[0].value;
-							var title=onenodes[i].querySelectorAll("input")[1].value;
-							var category=onenodes[i].querySelector("select").value;
-							var cates=document.getElementsByClassName("conul");
+							if(name){
+								var title=onenodes[i].querySelectorAll("input")[1].value;
+								var category=onenodes[i].querySelector("select").value;
+								var cates=document.getElementsByClassName("conul");
 							//alert(category);
-							var categ=category.toLowerCase();
+								var categ=category.toLowerCase();
 							//alert(categ+" cc "+category);
-							one:for(var j=0;j<cates.length;j++){
-								if(cates[j].previousSibling.innerHTML==categ){
-									for(var k=0;k<cates[j].children.length;k++){
+								one:for(var j=0;j<cates.length;j++){
+									if(cates[j].previousSibling.innerHTML==categ){
+										for(var k=0;k<cates[j].children.length;k++){
 										//alert(cates[j].children[k].innerHTML+" "+name)
-										if(cates[j].children[k].innerHTML==name){
+										if(cates[j].children[k].firstChild.innerHTML==name){
+											alert("此节点已经存在");
 											break one;
 										}
 									}
 									var newli=document.createElement("li");
-									newli.innerHTML=name;
+									newli.innerHTML="<label>"+name+'</label><input type="button" value="编辑"  class="editadd" onclick="editadd(event)">';
 									newli.id=name;
 									cates[j].appendChild(newli);
-									clickListen(newli);
+									clickListen(newli.firstChild);
 
 									this.b3=this.b3||{},function(){
 										var a;
@@ -137,6 +141,7 @@ function addCaclick(event){
 										}
 										var b=a.prototype;
 										b.name=name;
+										//alert(title);
 										b.title=title;
 										b._BaseNode_initialize=b.initialize;
 										b.initialize=function(a){
@@ -149,20 +154,126 @@ function addCaclick(event){
 
 								break;
 							}
-						}	
+						}
+						}else{
+							alert("请输入节点名字");
+						}
+					
 					}
+				}
 					var parent=target.parentNode.parentNode;
 					parent.style.display="none";
 					//parentNode.removeChild(parent);//<div><div><div><input>  </div></div></div>
-				}else{
-					alert("请输入参数");
-				}
-					
 				}else if(target.value=="cancel"){
 					
 					var appends=document.getElementsByClassName("appends")[0];
 					appends.style.display="none";
 				}
+}
+function createEdit(name,parentli,parentul){
+	var title=nodes[name].title;
+	var div=document.createElement("div");//最外层
+	div.className="appends";
+	div.style.display="none";
+	div.id="reedit";
+	var newp=document.createElement("div");//第一层
+	newp.innerHTML="Add Nodes";
+	newp.style.textAlign="center";
+	newp.style.height="30px";
+	newp.style.lineHeight="30px";
+	div.appendChild(newp);
+
+	var newdiv1=document.createElement("div");//第二层中
+	newdiv1.className="adda";
+	newdiv1.id="addnodes";
+	newdiv1.style.height="40px";
+	newdiv1.style.display="flex";
+	newdiv1.style.justifyContent="space-around";
+	newinput1=document.createElement("input");
+	newinput1.type="text";
+	newinput1.placeholder="Node name";
+	newinput1.value=name;
+
+	newinput1.className="addnodes-input";
+	newinput2=document.createElement("input");
+	newinput2.type="text";
+	newinput2.placeholder="Node title";
+	newinput2.value=title;
+
+	newinput2.className="addnodes-input";
+	newdiv1.appendChild(newinput1);
+	newdiv1.appendChild(newinput2);
+	//newdiv.innerHTML='<input type="text" placeholder="Node name"><input type="text" placeholder="Node title">';
+	//newdiv1.appendChild(newdiv);
+
+	div.appendChild(newdiv1);
+
+	var newdiv2=document.createElement("div");//第二层中
+	newdiv2.className="adda";
+	newdiv2.id="addnodes";
+	newdiv2.style.height="30px";
+	var newip1=document.createElement("input");
+	newip1.type="button";
+	newip1.value="Remove";
+	//newip1.className="operator";
+	newip1.className="edit-remove";
+	newip1.onclick=function(event){
+		for(var i=0;i<nodes.length;i++){
+			if(nodes[i].prototype.name==name){
+				nodes.splice(i,1);
+				break;
+			}
+		}
+		parentul.removeChild(parentli);
+		var reedit=document.getElementById("reedit");
+		reedit.style.display="none";
+	}
+	newdiv2.appendChild(newip1);
+
+	var newip2=document.createElement("input");
+	newip2.type="button";
+	newip2.value="cancel";
+	//newip1.className="operator";
+	newip2.className="edit-cancel";
+	newip2.onclick=function(event){
+		var reedit=document.getElementById("reedit");
+		reedit.style.display="none";
+	}
+	
+
+	var newip3=document.createElement("input");
+	newip3.type="button";
+	newip3.value="add";
+	//newip1.className="operator";
+	newip3.className="edit-add";
+	newip3.onclick=function(event){
+		for(var i=0;i<nodes.length;i++){
+			if(nodes[i].prototype.name==name){
+				var addnodes=document.getElementById("addnodes");
+				nodes[i].name=addnodes.querySelectorAll("input")[0].value;
+				nodes[name].title=addnodes.querySelectorAll("input")[1].value;
+				break;
+			}
+		}
+		var reedit=document.getElementById("reedit");
+		reedit.style.display="none";
+	}
+	newdiv2.appendChild(newip3);
+	newdiv2.appendChild(newip2);
+
+	div.appendChild(newdiv2)
+	body.appendChild(div);
+}
+function editadd(event){
+	var event=event||window.event;
+	var target=event.target||window.srcElement;
+	var name=target.previousSibling.innerHTML;
+	var parentli=target.parentNode;//li
+	var parentul=parentli.parentNode;//ul
+	createEdit(name,parentli,parentul);
+	var reedit=document.getElementById("reedit");
+	reedit.style.display="block";
+
 }
 (function headerListen(){
 	var headerFlag=[1,1,1,1,1];
@@ -204,6 +315,7 @@ registerNode(b3.Repeater);
 function registerNode(node){
 	var b=node.prototype.name;
 	nodes[b]=node;
+	nodes[b].prototype.title=nodes[b].prototype.title||nodes[b].prototype.name;
 }
 	var cate=["composite","decorator","condition","action"];
 for(var i=0;i<cate.length;i++){
@@ -216,7 +328,7 @@ for(var i=0;i<cate.length;i++){
 
 	var newul=createCategory(cate[i]);
 	for(var j=0;j<newul.children.length;j++){
-		clickListen(newul.children[j]);
+		clickListen(newul.children[j].firstChild);
 	}
 	newlis.appendChild(newdiv);
 	newlis.appendChild(newul);
@@ -229,7 +341,7 @@ function createCategory(a){
 	var str="";
 	for(var k in nodes){
 		if(nodes[k].prototype.category==a){
-			str+='<li id="'+k+'">'+k+'</li>';
+			str+='<li id="'+k+'"><label>'+k+'</label></li>';
 		}
 	}
 	//alert(str);
@@ -241,7 +353,8 @@ function clickListen(a){
 	a.onmousedown=function(event){
 		var e=event||window.event;
 		var targetEle=e.target||e.srcElement;
-		var inhtml=targetEle.parentNode.parentNode.firstChild.innerHTML;
+		event.stopPropagation();
+		var inhtml=targetEle.parentNode.parentNode.parentNode.firstChild.innerHTML;
 		var src=targetEle.innerHTML;
 		type=inhtml;
 		var pos=getPos(e);
@@ -265,16 +378,16 @@ function clickListen(a){
 		/*for(var k in nodes){
 			alert(nodes[k].prototype.title);
 		}*/
-		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,childs:[],title:src,description:"",Parameters:[],Properties:[]});
+		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,childs:[],title:nodes[src].prototype.title,description:"",Parameters:[],Properties:[]});
           tips.style.display="none";
          myform.style.display="block";
-         //alert(nodes[src].prototype.name);
-          myform["title"].value=src;
+         //alert()
+          myform["title"].value=nodes[src].prototype.title;
           myform["description"].value=nodes[src].prototype.description;
           checked=draws.length-1;
           parametersTable.innerHTML="";
           propertiesTable.innerHTML="";
-            d.redraw();
+            d.redraw(checked);
             var len=draws.length-1;
             
 		document.onmousemove=function(event){
@@ -284,7 +397,7 @@ function clickListen(a){
 			 posy=po.y;
 			 draws[len].display.x=posx;
 			 draws[len].display.y=posy;
-			 d.redraw();
+			 d.redraw(checked);
 		}
 		document.onmouseup=function(ev){
 			document.onmousemove=null; //将move清除
@@ -458,8 +571,9 @@ function imjs(data,k1,lx,ly,x,y){
     var t=data["src"];
     var type=data["type"];
     var id=data["id"];
+
     if(id){
-    	draws.push({id:id,display:{x:parseInt(x),y:parseInt(y)},title:t,src:t,type:type,title:data.title,description:data.description,childs:data.childs,Parameters:data.Parameters,Properties:data.Properties});
+    	draws.push({id:id,display:{x:parseInt(x),y:parseInt(y)},title:data["title"],src:t,type:type,title:data.title,description:data.description,childs:data.childs,Parameters:data.Parameters,Properties:data.Properties});
     }else{
     	draws.push({title:data.title,src:t,type:type,root:data["root"],display:{x:x,y:y},description:data.description,childs:data.childs,Parameters:data.Parameters,Properties:data.Properties});
     }
@@ -646,6 +760,7 @@ mycanvas.onmousedown=function(event){
 			}else{
 				tips.style.display="block";
 				myform.style.display="none";
+				checked=-1;
 			}
 				
 		mycanvas.onmousemove=function(event){
@@ -653,7 +768,7 @@ mycanvas.onmousedown=function(event){
 			var poss=getPos(event);
 				x=poss.x;
 				y=poss.y;
-				v.redraw();
+				v.redraw(checked);
 				if(flag+1){
 					v.drawLine(cont,lx,ly,x,y);
 				}else if(k>=0){
@@ -688,7 +803,8 @@ mycanvas.onmousedown=function(event){
 				var w=res.w;
 				//alert(lx+"lx ly "+ly);
 				if(w!=-1&&lx!=0&&ly!=0&& w!=flag){
-					v.redraw();
+					checked=-1;
+					v.redraw(checked);
 					var x=res.x;
 					var y=res.y;
 					//alert(""+x+" x y "+y);
@@ -711,7 +827,7 @@ mycanvas.onmousedown=function(event){
 					}
 				}else{	
 					
-					v.redraw();
+					v.redraw(checked);
 				}
 				
 		}
@@ -735,7 +851,7 @@ mycanvas.onmousedown=function(event){
 				}
 			}
 			draws.splice(w,1);
-			v.redraw();
+			v.redraw(checked);
 		}
 	}
 	

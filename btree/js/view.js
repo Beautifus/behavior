@@ -2,11 +2,16 @@
 function view(){
 }
 
-view.prototype.redraw=function(x,y,w,z){
+view.prototype.redraw=function(checked,x,y,w,z){
 		cont.clearRect(0,0,mycanvas.width,mycanvas.height);
 			for(var i=0;i<draws.length;i++){
 				var poss=draws[i];
-				v.drawCicle(cont,poss.type,poss.src,poss.display.x,poss.display.y);
+				if(checked==i){
+					v.fdrawCicle(cont,poss.type,poss.src,poss.display.x,poss.display.y);
+				}else{
+					v.drawCicle(cont,poss.type,poss.src,poss.display.x,poss.display.y);
+				}
+				
 			} 
 			for(var j=0;j<lines.length;j++){
 				draws[lines[j].k1].childs=[];
@@ -19,7 +24,57 @@ view.prototype.redraw=function(x,y,w,z){
 		
 	//alert(draws.length);
 }
+view.prototype.fdrawCicle=function(v,src,type,x,y){
+	v.shadowBlur=4;
+	v.shadowColor="#00ccff";
+	if(src!="init"){
+		//alert(src);
+		//this.drawPic(v,x,y);
+		switch(src){
+			case "composite":
+				this.drawComposite(v,type,x,y);
+				break;
+			case "decorator":
+				this.drawDecorator(v,type,x,y);
+				break;
+			case "condition":
+				this.drawCondition(v,type,x,y);
+				break;
+			case "action":
+				this.drawAction(v,type,x,y);
+				break;
+		}
+	}else{
+		this.drawRight(v,x,y,40,6,20,2);
+		v.fillStyle="white";
+		v.strokeStyle="#787372";
+		v.lineWidth=2;
+		v.beginPath();
+		v.moveTo(x+10,y);
+		v.arcTo(x+40,y,x+40,y+40,15);
+		v.arcTo(x+40,y+40,x,y+40,15);
+		v.arcTo(x,y+40,x,y,15);
+		v.arcTo(x,y,x+40,y,15);
+		v.fill();
+		v.stroke();
+		v.closePath();
+		v.beginPath();
+		v.strokeStyle="black";
+		v.lineWidth=3;
+		v.moveTo(x+30,y+20);
+		v.arc(x+20,y+20,10,0,2*Math.PI,true);
+		v.moveTo(x+30,y+10);
+		v.lineTo(x+10,y+30);
+		v.stroke();
+		v.closePath();
+		
+	}
+		
+		return this;
+	}
 view.prototype.drawCicle=function(v,src,type,x,y){
+	v.shadowBlur=0;
+	//v.shadowColor="blue";
 	if(src!="init"){
 		//alert(src);
 		//this.drawPic(v,x,y);
