@@ -3,7 +3,7 @@ var leftcon=document.getElementById("left");
 var con=document.createElement("div");
 con.className="composite";
 con.innerHTML="composite";
-var conChild=document.createElement("ul");
+var conChild=document.createElement("ul"); 
 conChild.className="comchild";
 conChild.id="conul";
 var checked;
@@ -22,7 +22,20 @@ var editeFlag=1;
 var body=document.getElementById("body");
 var tips=document.getElementById("tips");
 var myform=document.getElementById("myform");
+var nodes={};
+function registerNode(node){
+	var b=node.prototype.name;
+	nodes[b]=node;
+	nodes[b].prototype.title=nodes[b].prototype.title||nodes[b].prototype.name;
+}
+registerNode(b3.Sequence);
+registerNode(b3.Priority);
+registerNode(b3.MemPriority);
+registerNode(b3.Inverter);
+registerNode(b3.Repeater);
+function scrollHeight(){
 
+}
 var b3=this.b3;
 (function(){
 	var newdiv=document.createElement("div");//最外层
@@ -72,7 +85,6 @@ var b3=this.b3;
 			}
 		}
 		mydiv.style.display="block";
-			//parent.innerHTML="";
 		addcho();
 
 	}
@@ -105,11 +117,9 @@ function addCaclick(event){
 								var title=onenodes[i].querySelectorAll("input")[1].value;
 								var category=onenodes[i].querySelector("select").value;
 								var cates=document.getElementsByClassName("conul");
-							//alert(category);
 								var categ=category.toLowerCase();
-							//alert(categ+" cc "+category);
 								one:for(var j=0;j<cates.length;j++){
-									if(cates[j].previousSibling.innerHTML==categ){
+									if(cates[j].previousSibling.firstChild.innerHTML==categ){
 										for(var k=0;k<cates[j].children.length;k++){
 										//alert(cates[j].children[k].innerHTML+" "+name)
 										if(cates[j].children[k].firstChild.innerHTML==name){
@@ -121,7 +131,7 @@ function addCaclick(event){
 									newli.innerHTML="<label>"+name+'</label><input type="button" value="编辑"  class="editadd" onclick="editadd(event)">';
 									newli.id=name;
 									cates[j].appendChild(newli);
-									clickListen(newli.firstChild);
+									clickListen(newli);
 
 									this.b3=this.b3||{},function(){
 										var a;
@@ -151,7 +161,7 @@ function addCaclick(event){
 									}();
 
 								registerNode(b3[name]);
-
+								
 								break;
 							}
 						}
@@ -170,8 +180,7 @@ function addCaclick(event){
 					appends.style.display="none";
 				}
 }
-function createEdit(name,parentli,parentul){
-	var title=nodes[name].title;
+(function(){
 	var div=document.createElement("div");//最外层
 	div.className="appends";
 	div.style.display="none";
@@ -185,84 +194,104 @@ function createEdit(name,parentli,parentul){
 
 	var newdiv1=document.createElement("div");//第二层中
 	newdiv1.className="adda";
-	newdiv1.id="addnodes";
+	newdiv1.id="editnodes";
 	newdiv1.style.height="40px";
 	newdiv1.style.display="flex";
 	newdiv1.style.justifyContent="space-around";
 	newinput1=document.createElement("input");
 	newinput1.type="text";
 	newinput1.placeholder="Node name";
-	newinput1.value=name;
-
+	newinput1.onkeyup=function(event){
+		var event=event||window.event;
+		var tar=event.target||window.srcElement;
+		newinput1.value=tar.value;
+	}
 	newinput1.className="addnodes-input";
 	newinput2=document.createElement("input");
 	newinput2.type="text";
 	newinput2.placeholder="Node title";
-	newinput2.value=title;
-
+	newinput2.onkeyup=function(event){
+		var event=event||window.event;
+		var tar=event.target||window.srcElement;
+		newinput2.value=tar.value;
+	}
 	newinput2.className="addnodes-input";
 	newdiv1.appendChild(newinput1);
 	newdiv1.appendChild(newinput2);
-	//newdiv.innerHTML='<input type="text" placeholder="Node name"><input type="text" placeholder="Node title">';
-	//newdiv1.appendChild(newdiv);
 
 	div.appendChild(newdiv1);
 
 	var newdiv2=document.createElement("div");//第二层中
 	newdiv2.className="adda";
-	newdiv2.id="addnodes";
+	newdiv2.id="recanadd";
 	newdiv2.style.height="30px";
 	var newip1=document.createElement("input");
 	newip1.type="button";
 	newip1.value="Remove";
-	//newip1.className="operator";
 	newip1.className="edit-remove";
-	newip1.onclick=function(event){
-		for(var i=0;i<nodes.length;i++){
-			if(nodes[i].prototype.name==name){
-				nodes.splice(i,1);
-				break;
-			}
-		}
-		parentul.removeChild(parentli);
-		var reedit=document.getElementById("reedit");
-		reedit.style.display="none";
-	}
+	
 	newdiv2.appendChild(newip1);
 
 	var newip2=document.createElement("input");
 	newip2.type="button";
 	newip2.value="cancel";
-	//newip1.className="operator";
 	newip2.className="edit-cancel";
 	newip2.onclick=function(event){
 		var reedit=document.getElementById("reedit");
 		reedit.style.display="none";
 	}
-	
-
 	var newip3=document.createElement("input");
 	newip3.type="button";
-	newip3.value="add";
-	//newip1.className="operator";
+	newip3.value="sure";
 	newip3.className="edit-add";
-	newip3.onclick=function(event){
-		for(var i=0;i<nodes.length;i++){
-			if(nodes[i].prototype.name==name){
-				var addnodes=document.getElementById("addnodes");
-				nodes[i].name=addnodes.querySelectorAll("input")[0].value;
-				nodes[name].title=addnodes.querySelectorAll("input")[1].value;
-				break;
-			}
-		}
-		var reedit=document.getElementById("reedit");
-		reedit.style.display="none";
-	}
+	
+		
 	newdiv2.appendChild(newip3);
 	newdiv2.appendChild(newip2);
 
 	div.appendChild(newdiv2)
 	body.appendChild(div);
+})();
+function createEdit(name,parentli,parentul){
+	//alert(name+"  ff");
+
+	var title=nodes[name].title;
+	var editnodes=document.getElementsByClassName("addnodes-input");
+	editnodes[0].value=name;
+	editnodes[1].value=title;
+	var recanadd=document.getElementById("recanadd");
+	var childrens=recanadd.children;
+	//for(var i=0;i<children.length;i++){
+		childrens[0].onclick=function(event){
+			delete nodes[name];
+			parentul.removeChild(parentli);
+			var reedit=document.getElementById("reedit");
+			reedit.style.display="none";
+		}
+		childrens[1].onclick=function(event){
+				var editnodes=document.getElementsByClassName("addnodes-input");
+				var va=editnodes[0].value;
+				for(var key in nodes){
+
+					if(nodes[key].prototype.name==name){
+						var kk=key;
+						nodes[kk].prototype.name=va;
+						nodes[kk].prototype.title=editnodes[1].value;
+						nodes[va]=nodes[kk];
+
+						delete nodes[kk];
+						//alert(nodes[va]+" ha");
+						break;
+					}
+
+				}
+				parentli.firstChild.innerHTML=editnodes[0].value;
+				var reedit=document.getElementById("reedit");
+
+				reedit.style.display="none";
+			}
+	//}
+	
 }
 function editadd(event){
 	var event=event||window.event;
@@ -270,53 +299,62 @@ function editadd(event){
 	var name=target.previousSibling.innerHTML;
 	var parentli=target.parentNode;//li
 	var parentul=parentli.parentNode;//ul
-	createEdit(name,parentli,parentul);
 	var reedit=document.getElementById("reedit");
 	reedit.style.display="block";
-
+	createEdit(name,parentli,parentul);
 }
+
+
 (function headerListen(){
 	var headerFlag=[1,1,1,1,1];
-	for(var i=0;i<headers.children.length;i++){
-		let k=i;
-		headers.children[i].children[0].onclick=function(event){
+	var navs=["查询","File","Edit","View","Selection"];
+	//for(var i=1;i<headers.children.length;i++){
+	//	let k=i;
+	var k=-1;
+		document.onclick=function(event){
 			var event=event||window.event;
 			var target=event.target||event.srcElement;
-			var node=target.parentNode.parentNode.children;
-			for(var j=0;j<node.length;j++){
-				if(j!=k){headerFlag[j]=headerFlag[j]?headerFlag[j]:!headerFlag[j]}
-				if(node[j].getElementsByTagName("ul")[0]){
-					node[j].getElementsByTagName("ul")[0].style.display=null;
+			for(var i=0;i<navs.length;i++){
+				if(target.innerHTML==navs[i]){
+					k=i;
+					var node=target.parentNode.parentNode.children;
+					for(var j=1;j<node.length;j++){
+						if(j!=k){
+							headerFlag[j]=headerFlag[j]?headerFlag[j]:!headerFlag[j];
+						}
+					
+						if(node[j].getElementsByTagName("ul")[0].style.display){
+							node[j].getElementsByTagName("ul")[0].style.display="none";
+						}
+					
+					}
+					//alert(headerFlag[k]);
+					if(headerFlag[k]){
+						//alert(target.nextSibling);
+						target.nextSibling.style.display="block";
+						headerFlag[k]=!headerFlag[k];
+
+					}else if(!headerFlag[k]){
+						//alert("fa");
+						target.nextSibling.style.display="none";
+						headerFlag[k]=!headerFlag[k];
+					}	
 				}
-				
 			}
-			if(headerFlag[k]){
-				target.nextSibling.style.display="block";
-				headerFlag[k]=!headerFlag[k];
-			}else if(!headerFlag[k]){
-				target.nextSibling.style.display=null;
-				headerFlag[k]=!headerFlag[k];
-			}	
-			
-
+			if(k==-1){
+				var node=headers.children;
+				for(var j=1;j<node.length;j++){
+					headerFlag[j]=headerFlag[j]?headerFlag[j]:!headerFlag[j];			
+					if(node[j].getElementsByTagName("ul")[0].style.display){
+						node[j].getElementsByTagName("ul")[0].style.display="none";
+					}			
+				}
+			}
+			k=-1;
 		}
 
-		}
 })();
 inits();
-var nodes={};
-
-
-registerNode(b3.Sequence);
-registerNode(b3.Priority);
-registerNode(b3.MemPriority);
-registerNode(b3.Inverter);
-registerNode(b3.Repeater);
-function registerNode(node){
-	var b=node.prototype.name;
-	nodes[b]=node;
-	nodes[b].prototype.title=nodes[b].prototype.title||nodes[b].prototype.name;
-}
 	var cate=["composite","decorator","condition","action"];
 for(var i=0;i<cate.length;i++){
 	var newlis=document.createElement("li");
@@ -324,11 +362,12 @@ for(var i=0;i<cate.length;i++){
 	var newdiv=document.createElement("div");
 	newdiv.className="cate";
 
-	newdiv.innerHTML=cate[i];
+	newdiv.innerHTML="<b>"+cate[i]+"</b>";
 
 	var newul=createCategory(cate[i]);
 	for(var j=0;j<newul.children.length;j++){
-		clickListen(newul.children[j].firstChild);
+		//alert(newul.children[j].innerHTML);
+		clickListen(newul.children[j]);
 	}
 	newlis.appendChild(newdiv);
 	newlis.appendChild(newul);
@@ -344,18 +383,25 @@ function createCategory(a){
 			str+='<li id="'+k+'"><label>'+k+'</label></li>';
 		}
 	}
-	//alert(str);
 	newul.innerHTML=str;
 	return newul;
 }
 function clickListen(a){
+	//alert(a);
 	//alert(conChilds[i].innerHTML);
 	a.onmousedown=function(event){
 		var e=event||window.event;
 		var targetEle=e.target||e.srcElement;
 		event.stopPropagation();
-		var inhtml=targetEle.parentNode.parentNode.parentNode.firstChild.innerHTML;
-		var src=targetEle.innerHTML;
+		var parent=targetEle.parentNode;
+		//alert(parent.innerHTML);
+
+		var inhtml=parent.parentNode.previousSibling.firstChild.innerHTML;
+
+		//
+		//.children[0].innerHTML;//li->ul->div  <label>->div
+		var src=targetEle.innerHTML||targetEle.parentNode.firstChild.innerHTML;
+		//alert(src);
 		type=inhtml;
 		var pos=getPos(e);
 		divX=pos.x;

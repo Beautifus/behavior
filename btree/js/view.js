@@ -146,7 +146,19 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 			case "MemPriority":
 				this.drawMemPriority(v,x,y);
 				break;
+			default:
+				this.drawOtherComposite(v,type,x,y);
+				break;
 		}
+	}
+	view.prototype.drawOtherComposite=function(v,type,x,y){
+		 v.beginPath();
+		v.strokeStyle="black";
+		v.fillStyle="black";
+		v.fillText(type,x+10,y+22);
+		v.fill();
+		v.stroke();
+		v.closePath();
 	}
 	view.prototype.drawSequence=function(v,x,y){
 		v.beginPath();
@@ -225,36 +237,73 @@ view.prototype.drawCicle=function(v,src,type,x,y){
 
 	}
 	view.prototype.drawCondition=function(v,type,x,y){
-		//alert(type);
 		this.drawleft(v,x,y,6,20,2);
-		this.drawRight(v,x,y,40,6,20,2);
+		x1=x;y1=y;
+		x+=70,y+=20;
+		var a=70,b=20;
+		 var ox = 0.5 * a,
+        oy = 0.6 * b;
+	 	//var v=v;
+	    v.save();
+	    v.translate(x, y);
+	    v.beginPath();
+	    v.moveTo(0, b);
+	    v.bezierCurveTo(ox, b, a, oy, a, 0);
+	    v.bezierCurveTo(a, -oy, ox, -b, 0, -b);
+	    v.bezierCurveTo(-ox, -b, -a, -oy, -a, 0);
+	    v.bezierCurveTo(-a, oy, -ox, b, 0, b);
+	    v.closePath();
+	    v.fill();
+	    v.restore();
+	    v.beginPath();
+		v.strokeStyle="black";
+		v.fillStyle="black";
+		v.fillText(type,x1+60,y1+22);
+		v.fill();
+		v.stroke();
+		v.closePath();
+		/*
 		v.fillStyle="white";
 		v.strokeStyle="#787372";
 		v.lineWidth=2;
 		v.beginPath();
-		v.moveTo(x+10,y);
-		v.arcTo(x+40,y,x+40,y+40,15);
-		v.arcTo(x+40,y+40,x,y+40,15);
-		v.arcTo(x,y+40,x,y,15);
-		v.arcTo(x,y,x+40,y,15);
+		v.moveTo(x+40,y);
+		v.arcTo(x+140,y,x+140,y+40,20);
+		v.arcTo(x+140,y+40,x,y+40,20);
+		v.arcTo(x,y+40,x,y,20);
+		v.arcTo(x,y,x+140,y,20);
 		v.fill();
 		v.stroke();
 		v.closePath();
+		v.beginPath();
+		v.strokeStyle="black";
+		v.fillStyle="black";
+		v.fillText(type,x+60,y+22);
+		v.fill();
+		v.stroke();
+		v.closePath();
+		*/
 	}
 
 	view.prototype.drawAction=function(v,type,x,y){
 		//alert(type);
 		this.drawleft(v,x,y,6,20,2);
-		this.drawRight(v,x,y,40,6,20,2);
 		v.fillStyle="white";
 		v.strokeStyle="#787372";
 		v.lineWidth=2;
 		v.beginPath();
 		v.moveTo(x+10,y);
-		v.arcTo(x+40,y,x+40,y+40,15);
-		v.arcTo(x+40,y+40,x,y+40,15);
+		v.arcTo(x+140,y,x+140,y+40,15);
+		v.arcTo(x+140,y+40,x,y+40,15);
 		v.arcTo(x,y+40,x,y,15);
-		v.arcTo(x,y,x+40,y,15);
+		v.arcTo(x,y,x+140,y,15);
+		v.fill();
+		v.stroke();
+		v.closePath();
+		v.beginPath();
+		v.strokeStyle="black";
+		v.fillStyle="black";
+		v.fillText(type,x+60,y+22);
 		v.fill();
 		v.stroke();
 		v.closePath();

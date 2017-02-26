@@ -6,11 +6,8 @@
 	<link rel="stylesheet" type="text/css" href="./css/mycss.css">
 </head>
 <body id="body">
-
-	<nav id="head">
-
-		<ul class="header"><li><span>查询</span></li>
-			<li><span>File</span><ul class="child">
+		<ul class="header"><li style="margin:0px 30px;line-height:50px"><span>查询</span></li>
+			<li class="has-dropdown"><span >File</span><ul class="dropdown">
 					<li>
 					<a href="#">New Tree</a>
 					</li>
@@ -20,13 +17,15 @@
 					<li>
 						<a href="#">E</a>
 					</li>
-					<hr>
+					<li>
+						<hr style="width:100%;color:#111">
+					</li>
 					<li>
 						<a href="#">Add Custom Node</a>
 					</li>
 				</ul>
 			</li>
-			<li><span id="edit">Edit</span><ul class="child">
+			<li class="has-dropdown"><span id="edit">Edit</span><ul class="dropdown">
 					<li>
 						<a href="#">New Tree</a>
 					</li>
@@ -36,13 +35,15 @@
 					<li >
 						<a   id="exports" href="#">Export Tree</a>
 					</li>
-					<hr>
+					<li>
+						<hr style="width:100%;color:#111">
+					</li>
 					<li>
 						<a href="#">Add Custom Node</a>
 					</li>
 				</ul>
 			</li>
-			<li><span>View</span><ul class="child">
+			<li class="has-dropdown"><span>View</span><ul class="dropdown">
 					<li>
 					<a href="#">New Tree</a>
 					</li>
@@ -52,13 +53,15 @@
 					<li>
 						<a href="#">Export Tree</a>
 					</li>
-					<hr>
+					<li>
+						<hr style="width:100%;color:#111">
+					</li>
 					<li>
 						<a href="#">Add Custom Node</a>
 					</li>
 				</ul>
 			</li>
-			<li><span>Selection</span><ul class="child">
+			<li class="has-dropdown"><span>Selection</span><ul class="dropdown">
 					<li>
 					<a href="#">New Tree</a>
 					</li>
@@ -68,7 +71,9 @@
 					<li>
 						<a href="#">Export Tree</a>
 					</li>
-					<hr>
+					<li>
+						<hr style="width:100%;color:#111">
+					</li>
 					<li>
 						<a href="#">Add Custom Node</a>
 					</li>
@@ -79,22 +84,26 @@
 
 	</nav>
 	<div id="di">
-		<div class="node-list">
-			<div id="lists">
+		<div class="node-list has-scrollbar">
+			<div id="lists" >
 				<ul id="left" class="left" >
-					<li >
-						<div>
+					<li class="category">
+						<div >
 							node-list
 						</div>
 					</li>
 				</ul>
+				<div class="nano-pane">
+					<div class="nano-slider" style="transform:translate(0px,5.75893.px)"></div>
+				</div>
 			</div>
 			<div id="addcus">
 				<p>Add Custom Nodes</p>
 			</div>
+			
 		</div>
 		<div class="content" id="content" oncontextmenu="return false">
-			<canvas id="mycanvas" width="800" height="515"></canvas>
+			<canvas id="mycanvas" width="800" height="555"></canvas>
 		</div>
 		<div class="right">
 			<div id="tabs">
@@ -156,7 +165,6 @@
 </script>
 
 	<script type="text/javascript" src="./js/core.js"></script>
-	<script type="text/javascript" src="./js/tree.js"></script>
 	<script type="text/javascript" src="./js/view.js"></script>
 	<script type="text/javascript" src="./js/script.js"></script>
 </html>
