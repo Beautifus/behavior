@@ -737,7 +737,7 @@ mycanvas.onmousedown=function(event){
 		//alert(pos.y);
 		var k=-1,x=0,y=0,lx=0,ly=0,flag=-1,key;
 		for(var i=0;i<draws.length;i++){
-			if(draws[i].type=="composite"||draws[i].type=="condition"||draws[i].type=="action"||draws[i].type=="init"){
+			if(draws[i].type=="composite"||draws[i].type=="init"){
 				if(pos.x>=draws[i].display.x&&pos.x<=parseInt(draws[i].display.x)+40&&pos.y>=draws[i].display.y&&pos.y<=parseInt(draws[i].display.y)+40){
 					
 					k=i;
@@ -758,6 +758,28 @@ mycanvas.onmousedown=function(event){
 					ly=parseInt(draws[i].display.y)+20;
 					break;
 				}
+			}else if(draws[i].type=="condition"||draws[i].type=="action"){
+				if(pos.x>=draws[i].display.x&&pos.x<=parseInt(draws[i].display.x)+140&&pos.y>=draws[i].display.y&&pos.y<=parseInt(draws[i].display.y)+40){
+					
+					k=i;
+					x=draws[k].display.x;
+					y=draws[k].display.y;
+          			
+					break;
+				}else if(pos.x>=draws[i].display.x-9&&pos.x<draws[i].display.x&&pos.y>=parseInt(draws[i].display.y)+14&&pos.y<=parseInt(draws[i].display.y)+26){
+					flag=i;
+					key="left";
+					lx=draws[i].display.x-9;
+					ly=parseInt(draws[i].display.y)+20;
+					break;
+				}else if(pos.x>parseInt(draws[i].display.x)+140&&pos.x<=parseInt(draws[i].display.x)+149&&pos.y>=parseInt(draws[i].display.y)+14&&pos.y<=parseInt(draws[i].display.y)+26){
+					flag=i;
+					key="right";
+					lx=parseInt(draws[i].display.x)+149;
+					ly=parseInt(draws[i].display.y)+20;
+					break;
+				}
+
 			}else if(draws[i].type=="decorator"){
 				if(pos.x>=draws[i].display.x-100&&pos.x<=parseInt(draws[i].display.x)+100&&pos.y>=draws[i].display.y-30&&pos.y<=parseInt(draws[i].display.y)+30){
 					k=i;
@@ -821,13 +843,13 @@ mycanvas.onmousedown=function(event){
 					draws[k].display.x=x;
 		        	draws[k].display.y=y;
 		        	for(var j=0;j<lines.length;j++){
-		        		if(lines[j].k2==k&&(draws[k].type=="composite"||draws[i].type=="condition"||draws[i].type=="action"||draws[k].type=="init")){
+		        		if(lines[j].k2==k&&(draws[k].type=="composite"||draws[k].type=="condition"||draws[k].type=="action"||draws[k].type=="init")){
 		        			lines[j].x=draws[k].display.x-9;
 		        			lines[j].y=parseInt(draws[k].display.y)+20;
 		        		}else if(lines[j].k2==k&&(draws[k].type=="decorator")){
 		        			lines[j].x=draws[k].display.x-109;
 		        			lines[j].y=draws[k].display.y;
-		        		}else if(lines[j].k1==k&&(draws[k].type=="composite"||draws[i].type=="condition"||draws[i].type=="action"||draws[k].type=="init")){
+		        		}else if(lines[j].k1==k&&(draws[k].type=="composite"||draws[k].type=="init")){
 		        			lines[j].lx=parseInt(draws[k].display.x)+49;
 		        			lines[j].ly=parseInt(draws[k].display.y)+20;
 		        		}else if(lines[j].k1==k&&(draws[k].type=="decorator")){
@@ -906,9 +928,10 @@ mycanvas.onmousedown=function(event){
 function checkCate(x,y){
 	var w=-1;
 	for(var i=0;i<draws.length;i++){
-			if(draws[i].type=="composite"|| draws[i].type=="condition"||draws[i].type=="action"||draws[i].type=="init"){
-				draws[i].display.x=parseInt(draws[i].display.x);
-				draws[i].display.y=parseInt(draws[i].display.y);
+			draws[i].display.x=parseInt(draws[i].display.x);
+			draws[i].display.y=parseInt(draws[i].display.y);
+			if(draws[i].type=="composite"||draws[i].type=="init"){
+				
 				if((x>=draws[i].display.x-9&&x<draws[i].display.x&&y>=draws[i].display.y+14&&y<=draws[i].display.y+26)||(x>=draws[i].display.x&&x<=draws[i].display.x+40&&y>=draws[i].display.y&&y<=draws[i].display.y+40)){
 					x=draws[i].display.x-9;
 					y=draws[i].display.y+20;
@@ -919,6 +942,14 @@ function checkCate(x,y){
 				if((x>=draws[i].display.x-109&&x<draws[i].display.x-100&&y>=draws[i].display.y-6&&y<=draws[i].display.y+6)||(x>=draws[i].display.x-100&&x<=draws[i].display.x+100&&y>=draws[i].display.y-30&&y<=draws[i].display.y+30)){
 					x=draws[i].display.x-109;
 					y=draws[i].display.y;
+					w=i;
+					break;
+				}
+			}else if(draws[i].type=="condition"||draws[i].type=="action"){
+				
+				if((x>=draws[i].display.x-9&&x<draws[i].display.x&&y>=draws[i].display.y+14&&y<=draws[i].display.y+26)||(x>=draws[i].display.x&&x<=draws[i].display.x+140&&y>=draws[i].display.y&&y<=draws[i].display.y+40)){
+					x=draws[i].display.x-9;
+					y=draws[i].display.y+20;
 					w=i;
 					break;
 				}
