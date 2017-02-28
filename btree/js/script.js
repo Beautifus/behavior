@@ -94,13 +94,13 @@ function addcho(){
 	var newdiv=document.createElement("div");
 	newdiv.style.margin="0px auto 0px auto";
 	newdiv.className="onenode";
-	newdiv.innerHTML='<input type="text" placeholder="Node name"><input type="text" placeholder="Node title"><select ><option value="Composite">Composite</option><option value="Decorator">Decorator</option><option value="Condition">Condition</option><option value="Action">Action</option></select><input type="button"  class="operator" style="background:#f0320b" onclick="operationAdd(event)" id="cancelnode"value="-">';
+	newdiv.innerHTML='<input class="addcho" type="text" placeholder="Node name"><input type="text" class="addcho" placeholder="Node title"><select class="addcho"><option value="Composite">Composite</option><option value="Decorator">Decorator</option><option value="Condition">Condition</option><option value="Action">Action</option></select><input type="button"  class="operator" style="background:#f0320b" onclick="operationAdd(event)" id="cancelnode" value="-">';
 	mydiv.appendChild(newdiv);
 }
 function operationAdd(event){
 			var event=event||window.event;
 			var target=event.target||event.srcElement;
-			if(String.trim(target.value)=="-"){
+			if(target.value.trim()=="-"){
 				var parentdiv=target.parentNode;
 				parentdiv.parentNode.removeChild(parentdiv);
 			}
