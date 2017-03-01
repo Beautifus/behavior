@@ -340,9 +340,11 @@ label{
 
 }
 .exsure{
+
 	position:absolute;
 	bottom:0px;
 	right:0px;
+	height:35px;
 	width:100%;
 	background-color:rgba(180,190,180,0.3);
 }
@@ -355,6 +357,7 @@ label{
 	border:1px solid rgba(250,190,180,0.3);
 }
 .exsure input{
+	color:black;
 	background: white;
 	float:right;
 	width:80px;
