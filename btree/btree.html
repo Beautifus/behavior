@@ -7,7 +7,7 @@
 </head>
 <body id="body">
 		<ul class="header"><li style="margin:0px 30px;line-height:50px"><span>查询</span></li>
-			<li class="has-dropdown"><span >File</span><ul class="dropdown">
+			<li class="has-dropdown"><span>File</span><ul class="dropdown">
 					<li>暂无内容</li>
 				</ul>
 			</li>
@@ -40,7 +40,7 @@
 
 		</ul>
 
-	</nav>
+	
 	<div id="di">
 		<div class="node-list has-scrollbar">
 			<div id="lists" >
@@ -81,34 +81,34 @@
 				</div>
 				<form id="myform" style="display:none">
 					<div id="properties" >
-					<div style="margin-top:20px">
-						<label for="title">
-						Title
-						<input type="text" id="title" placeholder="Node Title" onkeyup="titleChange(event)">
-						</label>
-					</div>
-					<div style="margin-top:20px">
-						<label for="description">Description</label>
-						<input type="text" placeholder="Node description" id="description" onchange="descriptionChange(event)">
-						
-					</div>
-					<div style="margin-top:20px">
-						<label>Parameters</label><div id="editable-operator">
-							<input type="button" id="parameter" id="parameters" class="operator" value="+" onclick='addParameter("Parameters",parametersTable,null,null)'>
-						</div><div id="parameters-table">
+						<div style="margin-top:20px">
+							<label for="title">
+							Title
+							<input type="text" id="title" placeholder="Node Title" onkeyup="titleChange(event)">
+							</label>
 						</div>
-					</div>
-					<div style="margin-top:20px">
-						<label>Properties</label><div id="editable-operator">
-								<input type="button" class="operator" id="propertie" value="+" onclick='addParameter("Properties",propertiesTable,null,null)'>
-						</div><div id="properties-table">
+						<div style="margin-top:20px">
+							<label for="description">Description</label>
+							<input type="text" placeholder="Node description" id="description" onchange="descriptionChange(event)">
 							
 						</div>
+						<div style="margin-top:20px">
+							<label>Parameters</label><div id="editable-operator">
+								<input type="button" id="parameter" id="parameters" class="operator" value="+" onclick='addParameter("Parameters",parametersTable,null,null)'>
+							</div><div id="parameters-table">
+							</div>
+						</div>
+						<div style="margin-top:20px">
+							<label>Properties</label><div id="editable-operator">
+									<input type="button" class="operator" id="propertie" value="+" onclick='addParameter("Properties",propertiesTable,null,null)'>
+							</div><div id="properties-table">
+								
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
 				</form>
 				
+			</div>
 		</div>
 	</div>
 </body>

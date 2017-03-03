@@ -2,6 +2,10 @@
 margin:0 0;
 padding:0 0;
 color:#ffffff;
+
+}
+input{
+	color:#000000;
 }
 body{
 	/*background-color:#2f2b2a;*/
@@ -10,7 +14,6 @@ body{
 	width:100%;
 	height:555px;
 	overflow-y: hidden;
-	z-index:-2;
 }
 #di{
 	background-color:#222;
@@ -19,7 +22,6 @@ body{
 	left:0px;
 	width:100%;
 	height:100%;
-	z-index:-1;
 }
 
 a{
@@ -27,7 +29,7 @@ a{
 	color:#ffffff;
 }
 .header{
-	position:fixed;
+	position:relative;
 	top:0px;
 	left:0px;
 	right:0px;
@@ -36,6 +38,7 @@ a{
 	background-color:rgba(180,190,180,0.4);*/
 	display:flex;
 	list-style: none;
+	
 }
 .has-dropdown{
 	display: inline-block;
@@ -47,10 +50,10 @@ a{
 	cursor: pointer;
 	background:#333 none repeat scroll 0 0;
 }
+
 .has-dropdown:hover{
 	background:#111 none repeat scroll 0 0;
 }
-
 .has-dropdown>span{
 	display:block;
 	height:100%;
@@ -340,7 +343,6 @@ label{
 
 }
 .exsure{
-
 	position:absolute;
 	bottom:0px;
 	right:0px;

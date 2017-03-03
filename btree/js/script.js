@@ -1,5 +1,6 @@
 var v=new view();
 var leftcon=document.getElementById("left");
+
 var con=document.createElement("div");
 con.className="composite";
 con.innerHTML="composite";
@@ -26,16 +27,14 @@ var nodes={};
 function registerNode(node){
 	var b=node.prototype.name;
 	nodes[b]=node;
-	nodes[b].prototype.title=nodes[b].prototype.title||nodes[b].prototype.name;
+	nodes[b].prototype.title=nodes[b].title;
+	//||nodes[b].prototype.name;
 }
 registerNode(b3.Sequence);
 registerNode(b3.Priority);
 registerNode(b3.MemPriority);
 registerNode(b3.Inverter);
 registerNode(b3.Repeater);
-function scrollHeight(){
-
-}
 var b3=this.b3;
 (function(){
 	var newdiv=document.createElement("div");//最外层
@@ -74,7 +73,9 @@ var b3=this.b3;
 	newdiv.appendChild(newdiv2);
 	newdiv.appendChild(newdiv3);
 	body.appendChild(newdiv);
-	addcus.onclick=function(){
+	addcus.onclick=function(event){
+		var event=event||window.srcElement;
+		event.stopPropagation();
 		var mydiv=document.getElementsByClassName("appends")[0];
 		mydiv.style.display="block";
 		var parent=mydiv.querySelectorAll("div")[1];
@@ -85,11 +86,13 @@ var b3=this.b3;
 			}
 		}
 		mydiv.style.display="block";
-		addcho();
+		addcho(event);
 
 	}
 })();
-function addcho(){
+function addcho(event){
+	var event=event||window.event;
+	event.stopPropagation();
 	var mydiv=document.getElementById("addnodes");
 	var newdiv=document.createElement("div");
 	newdiv.style.margin="0px auto 0px auto";
@@ -100,6 +103,7 @@ function addcho(){
 function operationAdd(event){
 			var event=event||window.event;
 			var target=event.target||event.srcElement;
+			event.stopPropagation();
 			if(target.value.trim()=="-"){
 				var parentdiv=target.parentNode;
 				parentdiv.parentNode.removeChild(parentdiv);
@@ -108,6 +112,7 @@ function operationAdd(event){
 function addCaclick(event){
 			var event=event||window.event;
 			var target=event.target||event.srcElement;
+			event.stopPropagation();
 				var onenodes=document.getElementsByClassName("onenode");
 				if(target.value=="add"){
 					if(onenodes.length){
@@ -159,8 +164,16 @@ function addCaclick(event){
 										},
 										b3[name]=a;
 									}();
-
+								//alert(b3[name].title);
 								registerNode(b3[name]);
+								/*
+								function registerNode(node){
+									var b=node.prototype.name;
+									nodes[b]=node;
+									nodes[b].prototype.title=nodes[b].title||nodes[b].prototype.name;
+								}
+
+								*/
 								
 								break;
 							}
@@ -254,7 +267,7 @@ function addCaclick(event){
 })();
 function createEdit(name,parentli,parentul){
 	//alert(name+"  ff");
-
+	//alert(title);
 	var title=nodes[name].title;
 	var editnodes=document.getElementsByClassName("addnodes-input");
 	editnodes[0].value=name;
@@ -271,31 +284,43 @@ function createEdit(name,parentli,parentul){
 		childrens[1].onclick=function(event){
 				var editnodes=document.getElementsByClassName("addnodes-input");
 				var va=editnodes[0].value;
-				for(var key in nodes){
+				if(va==name){
+					for(var key in nodes){
+						if(nodes[key].prototype.name==name){
+							nodes[key].prototype.title=editnodes[1].value;
+						
+							break;
+						}
 
-					if(nodes[key].prototype.name==name){
-						var kk=key;
-						nodes[kk].prototype.name=va;
-						nodes[kk].prototype.title=editnodes[1].value;
-						nodes[va]=nodes[kk];
-
-						delete nodes[kk];
-						//alert(nodes[va]+" ha");
-						break;
 					}
+				}else{
+					for(var key in nodes){
+						if(nodes[key].prototype.name==name){
+							var kk=key;
+							nodes[kk].prototype.name=va;
+							nodes[kk].prototype.title=editnodes[1].value;
+							nodes[va]=nodes[kk];
+							delete nodes[kk];
+							alert(nodes[va]);
+							break;
+						}
 
+					}
 				}
+				
 				parentli.firstChild.innerHTML=editnodes[0].value;
 				var reedit=document.getElementById("reedit");
 
 				reedit.style.display="none";
 			}
+
 	//}
 	
 }
 function editadd(event){
 	var event=event||window.event;
 	var target=event.target||window.srcElement;
+	event.stopPropagation();
 	var name=target.previousSibling.innerHTML;
 	var parentli=target.parentNode;//li
 	var parentul=parentli.parentNode;//ul
@@ -308,14 +333,15 @@ function editadd(event){
 (function headerListen(){
 	var headerFlag=[1,1,1,1,1];
 	var navs=["查询","File","Edit","View","Selection"];
-	//for(var i=1;i<headers.children.length;i++){
-	//	let k=i;
 	var k=-1;
 		document.onclick=function(event){
 			var event=event||window.event;
 			var target=event.target||event.srcElement;
+			event.stopPropagation();
+			//alert(k);	
 			for(var i=0;i<navs.length;i++){
 				if(target.innerHTML==navs[i]){
+					
 					k=i;
 					var node=target.parentNode.parentNode.children;
 					for(var j=1;j<node.length;j++){
@@ -345,7 +371,7 @@ function editadd(event){
 				var node=headers.children;
 				for(var j=1;j<node.length;j++){
 					headerFlag[j]=headerFlag[j]?headerFlag[j]:!headerFlag[j];			
-					if(node[j].getElementsByTagName("ul")[0].style.display){
+					if(node[j].getElementsByTagName("ul")[0]&&node[j].getElementsByTagName("ul")[0].style.display){
 						node[j].getElementsByTagName("ul")[0].style.display="none";
 					}			
 				}
@@ -366,7 +392,7 @@ for(var i=0;i<cate.length;i++){
 
 	var newul=createCategory(cate[i]);
 	for(var j=0;j<newul.children.length;j++){
-		//alert(newul.children[j].innerHTML);
+	//	alert(newul.children[j].innerHTML);
 		clickListen(newul.children[j]);
 	}
 	newlis.appendChild(newdiv);
@@ -386,20 +412,15 @@ function createCategory(a){
 	newul.innerHTML=str;
 	return newul;
 }
+
 function clickListen(a){
-	//alert(a);
-	//alert(conChilds[i].innerHTML);
 	a.onmousedown=function(event){
 		var e=event||window.event;
+
 		var targetEle=e.target||e.srcElement;
 		event.stopPropagation();
 		var parent=targetEle.parentNode;
-		//alert(parent.innerHTML);
-
 		var inhtml=parent.parentNode.previousSibling.firstChild.innerHTML;
-
-		//
-		//.children[0].innerHTML;//li->ul->div  <label>->div
 		var src=targetEle.innerHTML||targetEle.parentNode.firstChild.innerHTML;
 		//alert(src);
 		type=inhtml;
@@ -421,18 +442,8 @@ function clickListen(a){
 		}
 		//alert(divX+" "+divY);
 		var d=v.drawCicle(cont,type,src,divX,divY); 
-		/*for(var k in nodes){
-			alert(nodes[k].prototype.title);
-		}*/
 		 draws.push({id:id,display:{x:posx,y:posy},src:src,type:type,childs:[],title:nodes[src].prototype.title,description:"",Parameters:[],Properties:[]});
-          tips.style.display="none";
-         myform.style.display="block";
-         //alert()
-          myform["title"].value=nodes[src].prototype.title;
-          myform["description"].value=nodes[src].prototype.description;
-          checked=draws.length-1;
-          parametersTable.innerHTML="";
-          propertiesTable.innerHTML="";
+        checked=draws.length-1;
             d.redraw(checked);
             var len=draws.length-1;
             
@@ -446,6 +457,14 @@ function clickListen(a){
 			 d.redraw(checked);
 		}
 		document.onmouseup=function(ev){
+			  tips.style.display="none";
+         myform.style.display="block";
+          myform["title"].value=nodes[src].prototype.title;
+          myform["description"].value=nodes[src].prototype.description;
+          
+          parametersTable.innerHTML="";
+          propertiesTable.innerHTML="";
+
 			document.onmousemove=null; //将move清除
             document.onmouseup=null;
             var po=getPos(ev);
@@ -475,6 +494,8 @@ function titleChange(event){
 e1.onclick=function(event){
 	var event=event||window.event;
 	var target=event.target||event.srcElement;
+	target.parentNode.parentNode.style.display=null;
+	event.stopPropagation();
 	var dat={
 			"type":"init",
 			"title":draws[0].title,
@@ -508,6 +529,7 @@ e1.onclick=function(event){
 		newinput1.value="确定";
 		newinput1.onclick=function(event){
 			var event=event||window.event;
+			event.stopPropagation();
 			target=event.target||event.srcElement;
 			target.parentNode.parentNode.parentNode.removeChild(target.parentNode.parentNode);
 		}
@@ -517,8 +539,6 @@ e1.onclick=function(event){
 
 		body.appendChild(newdiv);
 		
-		//data=dat;
-		target.parentNode.parentNode.style.display=null;
 }
 function exportJSON(dat,node){
 	var childrens=[];
@@ -548,15 +568,12 @@ function exportJSON(dat,node){
 e2.onclick=function(event){
 	var event=event||window.event;
 	var target=event.target||event.srcElement;
+	event.stopPropagation();
+	target.parentNode.parentNode.style.display=null;
 	cont.clearRect(0,0,mycanvas.width,mycanvas.height);
 	//alert(JSON.stringify(data));
 	draws=[];
 	lines=[];
-
-
-
-//{"type":"init","title":"btree","root":"98fd0431-e3dc-44a1-855c-be360ea68a10","description":"","Properties":[],"Parameters":[],"display":{"x":300,"y":200},"node":{"5ec6ef05-5535-4075-85b8-624518629a34":{"id":"5ec6ef05-5535-4075-85b8-624518629a34","src":"sequence","type":"composite","display":{"x":528,"y":218},"children":[],"title":"sequence","description":"","Parameters":[{"key":"qwe","value":" 而非地方"},{"key":"我r","value":" 而而"}],"Properties":[{"key":"我去额","value":"额"},{"key":"而","value":"而"}]},"98fd0431-e3dc-44a1-855c-be360ea68a10":{"id":"98fd0431-e3dc-44a1-855c-be360ea68a10","src":"Priority","type":"composite","display":{"x":434,"y":209},"children":["5ec6ef05-5535-4075-85b8-624518629a34","5ec6ef05-5535-4075-85b8-624518629a34"],"title":"Priority","description":"","Parameters":[{"key":"算法","value":"地方"}],"Properties":[{"key":"地方","value":"多发的"}]}}}
-
 	var newdiv=document.createElement("div");
 		newdiv.className="exports";
 		var newd=document.createElement("div");
@@ -570,24 +587,21 @@ e2.onclick=function(event){
 		newinput1.type="button";
 		newinput1.value="确定";
 		var dat;
+
+
 		newinput1.onclick=function(eve){
 			var eve=eve||window.event;
 			tart=eve.target||eve.srcElement;
+			eve.stopPropagation();
 			tart.parentNode.parentNode.parentNode.removeChild(tart.parentNode.parentNode);
-			var str='"'+tart.parentNode.previousSibling.innerHTML+'"';
+			//var str='"'+tart.parentNode.previousSibling.innerHTML+'"';
 			 dat=JSON.parse(tart.parentNode.previousSibling.innerText);
 			 var data=dat;
 			importJSON(data,dat,0,0,0,dat["display"].x,dat["display"].y);
-			//alert(JSON.stringify(draws));
 		}
 		newdivs.appendChild(newinput1);
 		newdiv.appendChild(newdivs);
 		body.appendChild(newdiv);		
-		//data=dat;
-		target.parentNode.parentNode.style.display=null;
-
-	
-	target.parentNode.parentNode.style.display=null;
 }
 function importJSON(data,dat,k1,lx,ly,x,y){
     imjs(dat,k1,lx,ly,x,y);
@@ -692,6 +706,7 @@ function addParameter(type,target,key,value){
     newoper.onclick=function(event){
 		var event=event||window.event;
 		var target=event.target||event.srcElement;
+		event.stopPropagation();
 		var parent=target.parentNode;
 		parent.parentNode.removeChild(parent);
 		switch(type){
