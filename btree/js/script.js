@@ -266,15 +266,12 @@ function addCaclick(event){
 	body.appendChild(div);
 })();
 function createEdit(name,parentli,parentul){
-	//alert(name+"  ff");
-	//alert(title);
-	var title=nodes[name].title;
+	var title=nodes[name].prototype.title;
 	var editnodes=document.getElementsByClassName("addnodes-input");
 	editnodes[0].value=name;
 	editnodes[1].value=title;
 	var recanadd=document.getElementById("recanadd");
 	var childrens=recanadd.children;
-	//for(var i=0;i<children.length;i++){
 		childrens[0].onclick=function(event){
 			delete nodes[name];
 			parentul.removeChild(parentli);
