@@ -36,10 +36,13 @@ registerNode(b3.MemPriority);
 registerNode(b3.Inverter);
 registerNode(b3.Repeater);
 var b3=this.b3;
-(function(){
+var createFloatLayer=function(){
+	var mydiv=document.createElement("div");
+	mydiv.className="layerDiv";
+	mydiv.style.display="none";
 	var newdiv=document.createElement("div");//最外层
 	newdiv.className="appends";
-	newdiv.style.display="none";
+	
 	var newp=document.createElement("div");//第一层
 	newp.innerHTML="Add Nodes";
 	newp.style.textAlign="center";
@@ -72,24 +75,36 @@ var b3=this.b3;
 
 	newdiv.appendChild(newdiv2);
 	newdiv.appendChild(newdiv3);
-	body.appendChild(newdiv);
-	addcus.onclick=function(event){
+	mydiv.appendChild(newdiv);
+	body.appendChild(mydiv);
+	
+	return mydiv;
+};
+var layer=function(fn){
+	var result;
+	return function(){
+		return result||(result=fn.apply(this,arguments));
+	}
+}
+var createmydiv=layer(createFloatLayer);
+addcus.onclick=function(event){
 		var event=event||window.srcElement;
 		event.stopPropagation();
-		var mydiv=document.getElementsByClassName("appends")[0];
-		mydiv.style.display="block";
-		var parent=mydiv.querySelectorAll("div")[1];
-		var onenodes=document.getElementsByClassName("onenode");
-		if(onenodes.length){
-			for(var i=0;i<onenodes.length;i++){
-				parent.removeChild(onenodes[i]);
+		var mydiv=createmydiv();
+	
+			mydiv.style.display="block";
+			var parent=mydiv.firstChild.querySelectorAll("div")[1];
+			var onenodes=document.getElementsByClassName("onenode");
+			if(onenodes.length){
+				for(var i=0;i<onenodes.length;i++){
+					parent.removeChild(onenodes[i]);
+				}
 			}
-		}
-		mydiv.style.display="block";
+			mydiv.style.display="block";
 		addcho(event);
 
 	}
-})();
+
 function addcho(event){
 	var event=event||window.event;
 	event.stopPropagation();
@@ -184,19 +199,22 @@ function addCaclick(event){
 					
 					}
 				}
-					var parent=target.parentNode.parentNode;
+					var parent=target.parentNode.parentNode.parentNode;
 					parent.style.display="none";
 					//parentNode.removeChild(parent);//<div><div><div><input>  </div></div></div>
 				}else if(target.value=="cancel"){
 					
-					var appends=document.getElementsByClassName("appends")[0];
+					var appends=createmydiv();
 					appends.style.display="none";
 				}
 }
-(function(){
+var createLayerEdit=function(){
+	var mydiv=document.createElement("div");
+	mydiv.className="layerDiv";
+	mydiv.style.display="none";
 	var div=document.createElement("div");//最外层
 	div.className="appends";
-	div.style.display="none";
+	
 	div.id="reedit";
 	var newp=document.createElement("div");//第一层
 	newp.innerHTML="Add Nodes";
@@ -250,8 +268,8 @@ function addCaclick(event){
 	newip2.value="cancel";
 	newip2.className="edit-cancel";
 	newip2.onclick=function(event){
-		var reedit=document.getElementById("reedit");
-		reedit.style.display="none";
+		var parent=document.getElementById("reedit").parentNode;
+		parent.style.display="none";
 	}
 	var newip3=document.createElement("input");
 	newip3.type="button";
@@ -262,24 +280,29 @@ function addCaclick(event){
 	newdiv2.appendChild(newip3);
 	newdiv2.appendChild(newip2);
 
-	div.appendChild(newdiv2)
-	body.appendChild(div);
-})();
+	div.appendChild(newdiv2);
+	mydiv.appendChild(div);
+	body.appendChild(mydiv);
+	return mydiv;
+};
+var layerEdit=layer(createLayerEdit);
 function createEdit(name,parentli,parentul){
 	var title=nodes[name].prototype.title;
-	var editnodes=document.getElementsByClassName("addnodes-input");
+	var EditDiv=layerEdit();
+	var editnodes=EditDiv.getElementsByClassName("addnodes-input");
 	editnodes[0].value=name;
 	editnodes[1].value=title;
 	var recanadd=document.getElementById("recanadd");
 	var childrens=recanadd.children;
+	var parent=document.getElementById("reedit").parentNode;
 		childrens[0].onclick=function(event){
 			delete nodes[name];
 			parentul.removeChild(parentli);
-			var reedit=document.getElementById("reedit");
-			reedit.style.display="none";
+			
+			parent.style.display="none";
 		}
 		childrens[1].onclick=function(event){
-				var editnodes=document.getElementsByClassName("addnodes-input");
+				var editnodes=EditDiv.getElementsByClassName("addnodes-input");
 				var va=editnodes[0].value;
 				if(va==name){
 					for(var key in nodes){
@@ -306,12 +329,8 @@ function createEdit(name,parentli,parentul){
 				}
 				
 				parentli.firstChild.innerHTML=editnodes[0].value;
-				var reedit=document.getElementById("reedit");
-
-				reedit.style.display="none";
+				parent.style.display="none";
 			}
-
-	//}
 	
 }
 function editadd(event){
@@ -321,8 +340,10 @@ function editadd(event){
 	var name=target.previousSibling.innerHTML;
 	var parentli=target.parentNode;//li
 	var parentul=parentli.parentNode;//ul
-	var reedit=document.getElementById("reedit");
-	reedit.style.display="block";
+	var myEdit=layerEdit();
+	//alert(myEdit);
+	var parent=document.getElementById("reedit").parentNode;
+	parent.style.display="block";
 	createEdit(name,parentli,parentul);
 }
 
@@ -351,14 +372,11 @@ function editadd(event){
 						}
 					
 					}
-					//alert(headerFlag[k]);
 					if(headerFlag[k]){
-						//alert(target.nextSibling);
 						target.nextSibling.style.display="block";
 						headerFlag[k]=!headerFlag[k];
 
 					}else if(!headerFlag[k]){
-						//alert("fa");
 						target.nextSibling.style.display="none";
 						headerFlag[k]=!headerFlag[k];
 					}	
